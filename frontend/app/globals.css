@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: "Inter", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: #111111;
+}
+
+body {
+  background-color: #111111;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 0, transparent 50%),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 0, transparent 50%);
+  background-size: 18px 18px;
+  color: #1a1a1a;
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f7f3ec;
+}
+::-webkit-scrollbar-thumb {
+  background: #dc0000;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a80000;
+}
+
+/* Markdown content styling inside analysis blocks */
+.markdown-content h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 1rem 0 0.5rem;
+}
+.markdown-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #dc0000;
+  margin: 0.75rem 0 0.4rem;
+}
+.markdown-content p {
+  color: #e0e0e0;
+  line-height: 1.75;
+  margin-bottom: 0.75rem;
+}
+.markdown-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+}
+.markdown-content ul li {
+  color: #e0e0e0;
+  padding: 0.3rem 0 0.3rem 1.25rem;
+  position: relative;
+  line-height: 1.65;
+}
+.markdown-content ul li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #dc0000;
+  font-size: 0.75rem;
+  top: 0.35rem;
+}
+.markdown-content strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid #333333;
+  margin: 1rem 0;
+}
+
+/* Red glow button */
+@layer components {
+  .btn-red {
+    @apply bg-ufc-red text-white font-bold px-6 py-3 rounded-lg
+           transition-all duration-200 hover:bg-ufc-red-dark
+           active:scale-95 cursor-pointer border-0 outline-none;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-ufc-muted font-semibold px-4 py-2 rounded-lg
+           border border-ufc-border transition-all duration-200
+           hover:border-ufc-border-bright hover:text-ufc-text cursor-pointer;
+  }
+  .card {
+    @apply bg-ufc-surface rounded-xl border border-ufc-border;
+  }
+  .card-elevated {
+    @apply bg-ufc-elevated rounded-xl border border-ufc-border;
+  }
+  .odds-positive {
+    @apply text-ufc-green font-bold;
+  }
+  .odds-negative {
+    @apply text-ufc-red font-bold;
+  }
+}
