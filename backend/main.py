@@ -10,7 +10,7 @@ import urllib.parse
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
@@ -43,10 +43,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve local fighter photos if present
-PHOTOS_DIR = os.path.join(_BASE, "fighter_photos")
-if os.path.isdir(PHOTOS_DIR):
-    app.mount("/fighter_photos", StaticFiles(directory=PHOTOS_DIR), name="fighter_photos")
 
 
 # ── Helper: fighter image lookup ──────────────────────────────────────────────
@@ -72,7 +68,7 @@ def get_fighter_photo_url(name: str) -> str | None:
     slug = name.replace(" ", "_").lower()
     local_fname = _photo_index().get(slug)
     if local_fname:
-        return f"/fighter_photos/{local_fname}"
+        return f"https://frontend-rouge-mu-86.vercel.app/fighter_photos/{local_fname}"
 
     headers = {"User-Agent": "UFC-Fight-Night/11.0"}
 
