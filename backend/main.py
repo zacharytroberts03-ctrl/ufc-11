@@ -47,64 +47,13 @@ app.add_middleware(
 
 # ── Helper: fighter image lookup ──────────────────────────────────────────────
 
-_PHOTO_INDEX: dict[str, str] | None = None
-
-
-def _photo_index() -> dict[str, str]:
-    global _PHOTO_INDEX
-    if _PHOTO_INDEX is None:
-        index: dict[str, str] = {}
-        if os.path.isdir(PHOTOS_DIR):
-            for fname in os.listdir(PHOTOS_DIR):
-                stem, ext = os.path.splitext(fname)
-                if ext.lower() in (".jpg", ".jpeg", ".png", ".webp"):
-                    index[stem.lower()] = fname
-        _PHOTO_INDEX = index
-    return _PHOTO_INDEX
+FRONTEND_URL = "https://frontend-rouge-mu-86.vercel.app"
 
 
 def get_fighter_photo_url(name: str) -> str | None:
-    """Return a URL to the fighter's photo. Local first, then ESPN, then Wikipedia."""
-    slug = name.replace(" ", "_").lower()
-    local_fname = _photo_index().get(slug)
-    if local_fname:
-        return f"https://frontend-rouge-mu-86.vercel.app/fighter_photos/{local_fname}"
+    slug = name.replace(" ", "_")
+    return f"{FRONTEND_URL}/fighter_photos/{slug}.jpg"
 
-    headers = {"User-Agent": "UFC-Fight-Night/11.0"}
-
-    # ESPN
-    try:
-        r = _requests.get(
-            f"https://site.api.espn.com/apis/search/v2?query={_urlparse.quote(name)}&section=mma&limit=5",
-            timeout=5,
-            headers=headers,
-        )
-        if r.status_code == 200:
-            for group in r.json().get("results", []):
-                for item in group.get("contents", []):
-                    athlete_id = item.get("id") or item.get("athleteId")
-                    if athlete_id:
-                        img_url = f"https://a.espncdn.com/i/headshots/mma/players/full/{athlete_id}.png"
-                        head = _requests.head(img_url, timeout=4, headers=headers)
-                        if head.status_code == 200:
-                            return img_url
-    except Exception:
-        pass
-
-    # Wikipedia
-    try:
-        wiki_slug = _urlparse.quote(name.replace(" ", "_"))
-        r = _requests.get(
-            f"https://en.wikipedia.org/api/rest_v1/page/summary/{wiki_slug}",
-            timeout=5,
-            headers=headers,
-        )
-        if r.status_code == 200:
-            return r.json().get("thumbnail", {}).get("source")
-    except Exception:
-        pass
-
-    return None
 
 
 # ── Pydantic models ───────────────────────────────────────────────────────────
