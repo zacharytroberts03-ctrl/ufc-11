@@ -235,6 +235,23 @@ def format_matchup_context_block(f1: dict, f2: dict, context: dict) -> str:
     title = "TITLE FIGHT" if context.get("is_title_fight") else ""
     fight_type_line = f"Format: {sched} rounds | {main_event} {title}".strip()
 
+    live_odds = context.get("live_odds")
+    if live_odds and live_odds.get("books"):
+        odds_lines = []
+        for b in live_odds["books"]:
+            odds_lines.append(
+                f"  {b['name']}: {live_odds['fighter1']} {b['f1_odds']:+d} / {live_odds['fighter2']} {b['f2_odds']:+d}"
+            )
+        best_f1 = live_odds["best_f1"]
+        best_f2 = live_odds["best_f2"]
+        odds_lines.append(
+            f"  BEST: {live_odds['fighter1']} {best_f1['odds']:+d} ({best_f1['book']}) | "
+            f"{live_odds['fighter2']} {best_f2['odds']:+d} ({best_f2['book']})"
+        )
+        live_odds_block = "Live market odds (The Odds API):\n" + "\n".join(odds_lines)
+    else:
+        live_odds_block = "Live market odds: NOT AVAILABLE — use line movement data only."
+
     line_movement = context.get("line_movement") or {}
     if line_movement:
         lm_lines = []
@@ -258,6 +275,8 @@ def format_matchup_context_block(f1: dict, f2: dict, context: dict) -> str:
 {fight_type_line}
 {reach_line}
 {age_line}
+
+{live_odds_block}
 
 {line_block}"""
 
@@ -395,6 +414,7 @@ def run_analysis(
         "is_main_event": (event_context or {}).get("is_main_event", False),
         "is_title_fight": (event_context or {}).get("is_title_fight", False),
         "line_movement": line_movement,
+        "live_odds": odds_data,
     }
 
     raw_analysis = get_analysis(f1_data, f2_data, matchup_context)
