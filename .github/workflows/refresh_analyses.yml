@@ -1,0 +1,38 @@
+name: Refresh Fight Analyses
+
+on:
+  schedule:
+    - cron: "0 10 * * 6"   # Saturday 6am ET (10:00 UTC = EDT)
+    - cron: "0 10 * * 1"   # Monday 6am ET (10:00 UTC = EDT)
+  workflow_dispatch:          # allow manual trigger any time
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run refresh script
+        run: python scripts/refresh_cache.py
+        env:
+          BACKEND_URL: https://backend-two-psi-85.vercel.app
+
+      - name: Commit updated analyses
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add backend/cache/analyses.json
+          git diff --staged --quiet && echo "No changes to commit" || git commit -m "chore: auto-refresh fight analyses"
+          git push
