@@ -1,6 +1,6 @@
 import type { CardData, OddsData, AnalysisResult, FighterData } from "./types";
 
-const BASE = "http://localhost:8000";
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://backend-two-psi-85.vercel.app";
 
 export async function fetchCard(): Promise<CardData> {
   const res = await fetch(`${BASE}/api/card`, { cache: "no-store" });
