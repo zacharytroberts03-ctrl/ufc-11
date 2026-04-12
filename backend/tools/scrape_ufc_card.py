@@ -102,16 +102,16 @@ def find_current_event(debug: bool = False) -> tuple[str, str, str, str]:
         if ev["date"] == today:
             return ev["name"], ev["date_str"], ev["location"], ev["url"]
 
-    # Priority 2: next upcoming event (closest future date)
-    future = [ev for ev in all_events if ev["date"] and ev["date"] > today]
-    if future:
-        closest = min(future, key=lambda e: e["date"])
-        return closest["name"], closest["date_str"], closest["location"], closest["url"]
-
-    # Priority 3: fall back to most recent past event only if nothing upcoming
+    # Priority 2: most recent past event (closest to today going backward)
     past = [ev for ev in all_events if ev["date"] and ev["date"] < today]
     if past:
         closest = max(past, key=lambda e: e["date"])
+        return closest["name"], closest["date_str"], closest["location"], closest["url"]
+
+    # Priority 3: next future event (closest upcoming)
+    future = [ev for ev in all_events if ev["date"] and ev["date"] > today]
+    if future:
+        closest = min(future, key=lambda e: e["date"])
         return closest["name"], closest["date_str"], closest["location"], closest["url"]
 
     raise ValueError("Could not determine a current or upcoming UFC event.")
