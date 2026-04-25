@@ -1,0 +1,114 @@
+{
+  "event_name": "UFC Fight Night: Sterling vs. Zalal",
+  "date": "April 25, 2026",
+  "location": "Las Vegas, Nevada, USA",
+  "event_url": "http://www.ufcstats.com/event-details/e60d773a0a42048a",
+  "main_card": [
+    {
+      "fighter1": "Aljamain Sterling",
+      "fighter2": "Youssef Zalal",
+      "weight_class": "Featherweight",
+      "section": "main",
+      "f1_img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Alijamain_Sterling_at_UFC_228.jpg/330px-Alijamain_Sterling_at_UFC_228.jpg",
+      "f2_img": null
+    },
+    {
+      "fighter1": "Norma Dumont",
+      "fighter2": "Joselyne Edwards",
+      "weight_class": "Women's Bantamweight",
+      "section": "main",
+      "f1_img": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Norma_Dumont_OF.jpg/330px-Norma_Dumont_OF.jpg",
+      "f2_img": null
+    },
+    {
+      "fighter1": "Rafa Garcia",
+      "fighter2": "Alexander Hernandez",
+      "weight_class": "Lightweight",
+      "section": "main",
+      "f1_img": null,
+      "f2_img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Alexander_Hernandez_Jan_19%2C_2019.jpg/330px-Alexander_Hernandez_Jan_19%2C_2019.jpg"
+    },
+    {
+      "fighter1": "Davey Grant",
+      "fighter2": "Adrian Luna Martinetti",
+      "weight_class": "Bantamweight",
+      "section": "main",
+      "f1_img": null,
+      "f2_img": null
+    },
+    {
+      "fighter1": "Montel Jackson",
+      "fighter2": "Raoni Barcelos",
+      "weight_class": "Bantamweight",
+      "section": "main",
+      "f1_img": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Montel_Jackson_at_UFC_232.jpg/330px-Montel_Jackson_at_UFC_232.jpg",
+      "f2_img": null
+    }
+  ],
+  "prelims": [
+    {
+      "fighter1": "Marcus Buchecha",
+      "fighter2": "Ryan Spann",
+      "weight_class": "Heavyweight",
+      "section": "prelim",
+      "f1_img": null,
+      "f2_img": null
+    },
+    {
+      "fighter1": "Rodolfo Vieira",
+      "fighter2": "Eric McConico",
+      "weight_class": "Middleweight",
+      "section": "prelim",
+      "f1_img": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Rodolfo_Vieira_and_E.Zenkevich.JPG/330px-Rodolfo_Vieira_and_E.Zenkevich.JPG",
+      "f2_img": null
+    },
+    {
+      "fighter1": "Jackson McVey",
+      "fighter2": "Sedriques Dumas",
+      "weight_class": "Middleweight",
+      "section": "prelim",
+      "f1_img": null,
+      "f2_img": null
+    },
+    {
+      "fighter1": "Mayra Bueno Silva",
+      "fighter2": "Michelle Montague",
+      "weight_class": "Women's Bantamweight",
+      "section": "prelim",
+      "f1_img": null,
+      "f2_img": null
+    },
+    {
+      "fighter1": "Jafel Filho",
+      "fighter2": "Cody Durden",
+      "weight_class": "Flyweight",
+      "section": "prelim",
+      "f1_img": null,
+      "f2_img": null
+    },
+    {
+      "fighter1": "Francis Marshall",
+      "fighter2": "Lucas Brennan",
+      "weight_class": "Lightweight",
+      "section": "prelim",
+      "f1_img": null,
+      "f2_img": null
+    },
+    {
+      "fighter1": "Max Griffin",
+      "fighter2": "Victor Valenzuela",
+      "weight_class": "Welterweight",
+      "section": "prelim",
+      "f1_img": null,
+      "f2_img": null
+    },
+    {
+      "fighter1": "Talita Alencar",
+      "fighter2": "Julia Polastri",
+      "weight_class": "Women's Strawweight",
+      "section": "prelim",
+      "f1_img": null,
+      "f2_img": null
+    }
+  ]
+}
