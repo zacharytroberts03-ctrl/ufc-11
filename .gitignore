@@ -22,6 +22,10 @@ Thumbs.db
 
 # Cache backup
 backend/cache/analyses.json.bak
+backend/cache/refresh.log
+
+# Next.js build artifact
+frontend/tsconfig.tsbuildinfo
 
 # Fighter photos (binary assets, not committed)
 backend/fighter_photos/

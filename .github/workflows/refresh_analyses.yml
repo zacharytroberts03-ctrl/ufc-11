@@ -1,10 +1,14 @@
 name: Refresh Fight Analyses
 
 on:
-  schedule:
-    - cron: "0 10 * * 6"   # Saturday 6am ET (10:00 UTC = EDT)
-    - cron: "0 10 * * 1"   # Monday 6am ET (10:00 UTC = EDT)
-  workflow_dispatch:          # allow manual trigger any time
+  # Schedule disabled — daily refresh now runs on a local Windows scheduled task
+  # (see setup_schedule.ps1) that uses backend/scripts/refresh_cache.py to
+  # publish static JSON to frontend/public/data/. Re-enable here only if the
+  # live-backend pipeline is revived.
+  # schedule:
+  #   - cron: "0 10 * * 6"   # Saturday 6am ET (10:00 UTC = EDT)
+  #   - cron: "0 10 * * 1"   # Monday 6am ET (10:00 UTC = EDT)
+  workflow_dispatch:          # manual trigger only
 
 jobs:
   refresh:

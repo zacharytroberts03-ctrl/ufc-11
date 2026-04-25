@@ -1,20 +1,66 @@
 import type { CardData, OddsData, AnalysisResult, FighterData } from "./types";
 
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://backend-two-psi-85.vercel.app";
+// Data is published as static JSON by the daily refresh_cache.py cron, which
+// commits the files and lets Vercel auto-redeploy. There is no live backend.
+const CARD_URL = "/data/card.json";
+const ANALYSES_URL = "/data/analyses.json";
+
+interface AnalysesFile {
+  event_key: string | null;
+  generated_at: string | null;
+  fights: Record<string, AnalysisResult>;
+}
+
+let _analysesPromise: Promise<AnalysesFile> | null = null;
+
+function loadAnalyses(): Promise<AnalysesFile> {
+  if (!_analysesPromise) {
+    _analysesPromise = fetch(ANALYSES_URL, { cache: "no-store" }).then((res) => {
+      if (!res.ok) throw new Error(`Failed to load analyses: ${res.status}`);
+      return res.json();
+    });
+  }
+  return _analysesPromise;
+}
+
+function slug(s: string): string {
+  return (
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "unknown"
+  );
+}
+
+function fightKey(f1: string, f2: string): string {
+  const [a, b] = [slug(f1), slug(f2)].sort();
+  return `${a}__${b}`;
+}
 
 export async function fetchCard(): Promise<CardData> {
-  const res = await fetch(`${BASE}/api/card`, { cache: "no-store" });
+  const res = await fetch(CARD_URL, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to fetch card: ${res.status}`);
   return res.json();
 }
 
 export async function fetchOdds(f1: string, f2: string): Promise<OddsData> {
-  const res = await fetch(
-    `${BASE}/api/odds/${encodeURIComponent(f1)}/${encodeURIComponent(f2)}`,
-    { cache: "no-store" }
-  );
-  if (!res.ok) return { available: false };
-  return res.json();
+  try {
+    const data = await loadAnalyses();
+    const fight = data.fights[fightKey(f1, f2)];
+    const odds = fight?.odds_data;
+    if (!odds) return { available: false };
+    return {
+      available: true,
+      fighter1: odds.fighter1 ?? f1,
+      fighter2: odds.fighter2 ?? f2,
+      books: odds.books,
+      best_f1: odds.best_f1,
+      best_f2: odds.best_f2,
+      hedge: fight?.hedge_summary ?? undefined,
+    };
+  } catch {
+    return { available: false };
+  }
 }
 
 export async function fetchCachedAnalysis(
@@ -22,50 +68,37 @@ export async function fetchCachedAnalysis(
   f2: string
 ): Promise<AnalysisResult | null> {
   try {
-    const res = await fetch(
-      `${BASE}/api/analysis/lookup/${encodeURIComponent(f1)}/${encodeURIComponent(f2)}`,
-      { cache: "no-store" }
-    );
-    if (res.status === 404) return null;
-    if (!res.ok) return null;
-    return res.json();
+    const data = await loadAnalyses();
+    return data.fights[fightKey(f1, f2)] ?? null;
   } catch {
     return null;
   }
 }
 
 export async function fetchFighter(name: string): Promise<FighterData | null> {
+  // Cached fighter data already lives inside each AnalysisResult.f1_data /
+  // f2_data, so this fallback is only used if a caller asks about a fighter
+  // not on the current card. On the deployed site we have no live scraper.
   try {
-    const res = await fetch(
-      `${BASE}/api/fighter/${encodeURIComponent(name)}`,
-      { cache: "no-store" }
-    );
-    if (!res.ok) return null;
-    return res.json();
+    const data = await loadAnalyses();
+    const target = name.toLowerCase();
+    for (const fight of Object.values(data.fights)) {
+      if (fight.f1_data?.name?.toLowerCase() === target) return fight.f1_data;
+      if (fight.f2_data?.name?.toLowerCase() === target) return fight.f2_data;
+    }
+    return null;
   } catch {
     return null;
   }
 }
 
 export async function runAnalysis(
-  f1: string,
-  f2: string,
-  totalStake: number = 100,
-  eventContext: Record<string, unknown> = {}
+  _f1: string,
+  _f2: string,
+  _totalStake: number = 100,
+  _eventContext: Record<string, unknown> = {}
 ): Promise<AnalysisResult> {
-  const res = await fetch(`${BASE}/api/analyze`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      f1,
-      f2,
-      total_stake: totalStake,
-      event_context: eventContext,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || `Analysis failed: ${res.status}`);
-  }
-  return res.json();
+  throw new Error(
+    "Live analysis is not available on the deployed site — analyses are precomputed daily."
+  );
 }
