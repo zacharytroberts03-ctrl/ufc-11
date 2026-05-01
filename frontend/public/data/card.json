@@ -1,114 +1,114 @@
 {
-  "event_name": "UFC Fight Night: Sterling vs. Zalal",
-  "date": "April 25, 2026",
-  "location": "Las Vegas, Nevada, USA",
-  "event_url": "http://www.ufcstats.com/event-details/e60d773a0a42048a",
+  "event_name": "UFC Fight Night: Della Maddalena vs. Prates",
+  "date": "May 02, 2026",
+  "location": "Perth, Western Australia, Australia",
+  "event_url": "http://www.ufcstats.com/event-details/872b018076f831b0",
   "main_card": [
     {
-      "fighter1": "Aljamain Sterling",
-      "fighter2": "Youssef Zalal",
-      "weight_class": "Featherweight",
+      "fighter1": "Jack Della Maddalena",
+      "fighter2": "Carlos Prates",
+      "weight_class": "Welterweight",
       "section": "main",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Aljamain_Sterling.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Youssef_Zalal.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Jack_Della_Maddalena.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Carlos_Prates.jpg"
     },
     {
-      "fighter1": "Joselyne Edwards",
-      "fighter2": "Norma Dumont",
-      "weight_class": "Women's Bantamweight",
-      "section": "main",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Joselyne_Edwards.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Norma_Dumont.jpg"
-    },
-    {
-      "fighter1": "Rafa Garcia",
-      "fighter2": "Alexander Hernandez",
+      "fighter1": "Beneil Dariush",
+      "fighter2": "Quillan Salkilld",
       "weight_class": "Lightweight",
       "section": "main",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Rafa_Garcia.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Alexander_Hernandez.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Beneil_Dariush.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Quillan_Salkilld.jpg"
     },
     {
-      "fighter1": "Davey Grant",
-      "fighter2": "Adrian Luna Martinetti",
-      "weight_class": "Bantamweight",
+      "fighter1": "Tim Elliott",
+      "fighter2": "Steve Erceg",
+      "weight_class": "Flyweight",
       "section": "main",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Davey_Grant.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Adrian_Luna_Martinetti.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Tim_Elliott.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Steve_Erceg.jpg"
     },
     {
-      "fighter1": "Raoni Barcelos",
-      "fighter2": "Montel Jackson",
-      "weight_class": "Bantamweight",
+      "fighter1": "Marwan Rahiki",
+      "fighter2": "Ollie Schmid",
+      "weight_class": "Featherweight",
       "section": "main",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Raoni_Barcelos.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Montel_Jackson.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Marwan_Rahiki.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Ollie_Schmid.jpg"
+    },
+    {
+      "fighter1": "Shamil Gaziev",
+      "fighter2": "Brando Pericic",
+      "weight_class": "Heavyweight",
+      "section": "main",
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Shamil_Gaziev.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Brando_Pericic.jpg"
     }
   ],
   "prelims": [
     {
-      "fighter1": "Ryan Spann",
-      "fighter2": "Marcus Buchecha",
+      "fighter1": "Tai Tuivasa",
+      "fighter2": "Louie Sutherland",
       "weight_class": "Heavyweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Ryan_Spann.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Marcus_Buchecha.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Tai_Tuivasa.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Louie_Sutherland.jpg"
     },
     {
-      "fighter1": "Eric McConico",
-      "fighter2": "Rodolfo Vieira",
+      "fighter1": "Cam Rowston",
+      "fighter2": "Robert Bryczek",
       "weight_class": "Middleweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Eric_McConico.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Rodolfo_Vieira.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Cam_Rowston.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Robert_Bryczek.jpg"
     },
     {
-      "fighter1": "Jackson McVey",
-      "fighter2": "Sedriques Dumas",
+      "fighter1": "Junior Tafa",
+      "fighter2": "Kevin Christian",
+      "weight_class": "Light Heavyweight",
+      "section": "prelim",
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Junior_Tafa.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Kevin_Christian.jpg"
+    },
+    {
+      "fighter1": "Jacob Malkoun",
+      "fighter2": "Gerald Meerschaert",
       "weight_class": "Middleweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Jackson_McVey.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Sedriques_Dumas.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Jacob_Malkoun.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Gerald_Meerschaert.jpg"
     },
     {
-      "fighter1": "Michelle Montague",
-      "fighter2": "Mayra Bueno Silva",
-      "weight_class": "Women's Bantamweight",
-      "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Michelle_Montague.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Mayra_Bueno_Silva.jpg"
-    },
-    {
-      "fighter1": "Cody Durden",
-      "fighter2": "Jafel Filho",
+      "fighter1": "Colby Thicknesse",
+      "fighter2": "Vince Morales",
       "weight_class": "Bantamweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Cody_Durden.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Jafel_Filho.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Colby_Thicknesse.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Vince_Morales.jpg"
     },
     {
-      "fighter1": "Francis Marshall",
-      "fighter2": "Lucas Brennan",
-      "weight_class": "Lightweight",
+      "fighter1": "Ben Johnston",
+      "fighter2": "Wes Schultz",
+      "weight_class": "Middleweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Francis_Marshall.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Lucas_Brennan.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Ben_Johnston.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Wes_Schultz.jpg"
     },
     {
-      "fighter1": "Victor Valenzuela",
-      "fighter2": "Max Griffin",
+      "fighter1": "Jonathan Micallef",
+      "fighter2": "Themba Gorimbo",
       "weight_class": "Welterweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Victor_Valenzuela.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Max_Griffin.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Jonathan_Micallef.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Themba_Gorimbo.jpg"
     },
     {
-      "fighter1": "Talita Alencar",
-      "fighter2": "Julia Polastri",
-      "weight_class": "Women's Strawweight",
+      "fighter1": "Dom Mar Fan",
+      "fighter2": "Kody Steele",
+      "weight_class": "Lightweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Talita_Alencar.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Julia_Polastri.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Dom_Mar_Fan.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Kody_Steele.jpg"
     }
   ]
 }
