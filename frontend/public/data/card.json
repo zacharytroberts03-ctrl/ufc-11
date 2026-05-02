@@ -5,28 +5,28 @@
   "event_url": "http://www.ufcstats.com/event-details/872b018076f831b0",
   "main_card": [
     {
-      "fighter1": "Jack Della Maddalena",
-      "fighter2": "Carlos Prates",
+      "fighter1": "Carlos Prates",
+      "fighter2": "Jack Della Maddalena",
       "weight_class": "Welterweight",
       "section": "main",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Jack_Della_Maddalena.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Carlos_Prates.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Carlos_Prates.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Jack_Della_Maddalena.jpg"
     },
     {
-      "fighter1": "Beneil Dariush",
-      "fighter2": "Quillan Salkilld",
+      "fighter1": "Quillan Salkilld",
+      "fighter2": "Beneil Dariush",
       "weight_class": "Lightweight",
       "section": "main",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Beneil_Dariush.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Quillan_Salkilld.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Quillan_Salkilld.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Beneil_Dariush.jpg"
     },
     {
-      "fighter1": "Tim Elliott",
-      "fighter2": "Steve Erceg",
+      "fighter1": "Steve Erceg",
+      "fighter2": "Tim Elliott",
       "weight_class": "Flyweight",
       "section": "main",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Tim_Elliott.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Steve_Erceg.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Steve_Erceg.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Tim_Elliott.jpg"
     },
     {
       "fighter1": "Marwan Rahiki",
@@ -37,22 +37,22 @@
       "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Ollie_Schmid.jpg"
     },
     {
-      "fighter1": "Shamil Gaziev",
-      "fighter2": "Brando Pericic",
+      "fighter1": "Brando Pericic",
+      "fighter2": "Shamil Gaziev",
       "weight_class": "Heavyweight",
       "section": "main",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Shamil_Gaziev.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Brando_Pericic.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Brando_Pericic.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Shamil_Gaziev.jpg"
     }
   ],
   "prelims": [
     {
-      "fighter1": "Tai Tuivasa",
-      "fighter2": "Louie Sutherland",
+      "fighter1": "Louie Sutherland",
+      "fighter2": "Tai Tuivasa",
       "weight_class": "Heavyweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Tai_Tuivasa.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Louie_Sutherland.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Louie_Sutherland.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Tai_Tuivasa.jpg"
     },
     {
       "fighter1": "Cam Rowston",
@@ -87,12 +87,12 @@
       "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Vince_Morales.jpg"
     },
     {
-      "fighter1": "Ben Johnston",
-      "fighter2": "Wes Schultz",
+      "fighter1": "Wes Schultz",
+      "fighter2": "Ben Johnston",
       "weight_class": "Middleweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Ben_Johnston.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Wes_Schultz.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Wes_Schultz.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Ben_Johnston.jpg"
     },
     {
       "fighter1": "Jonathan Micallef",
@@ -103,12 +103,12 @@
       "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Themba_Gorimbo.jpg"
     },
     {
-      "fighter1": "Dom Mar Fan",
-      "fighter2": "Kody Steele",
+      "fighter1": "Kody Steele",
+      "fighter2": "Dom Mar Fan",
       "weight_class": "Lightweight",
       "section": "prelim",
-      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Dom_Mar_Fan.jpg",
-      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Kody_Steele.jpg"
+      "f1_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Kody_Steele.jpg",
+      "f2_img": "https://frontend-rouge-mu-86.vercel.app/fighter_photos/Dom_Mar_Fan.jpg"
     }
   ]
 }
