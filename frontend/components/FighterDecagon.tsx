@@ -37,8 +37,9 @@ interface Props {
   showLabels?: boolean;
 }
 
-// Padding around the chart so labels at the edges don't clip.
-const PAD = 28;
+// Padding around the chart so labels at the edges don't clip. Sized to fit the
+// widest label "O-WRS 10" plus letter spacing at the 3 o'clock / 9 o'clock axes.
+const PAD = 42;
 
 export default function FighterDecagon({
   reports,
@@ -52,7 +53,7 @@ export default function FighterDecagon({
   const cx = viewSize / 2;
   const cy = viewSize / 2;
   const maxRadius = size * 0.42;
-  const labelRadius = size * 0.52;
+  const labelRadius = size * 0.46;
 
   // Each axis position around the circle. Start at -90deg (top) clockwise.
   const axisAngles = AXES.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI) / AXES.length);
@@ -148,14 +149,14 @@ export default function FighterDecagon({
               x={x}
               y={y}
               textAnchor={anchor}
-              fontSize={9}
+              fontSize={8.5}
               fontWeight={700}
               dominantBaseline="middle"
-              style={{ letterSpacing: "0.04em" }}
+              style={{ letterSpacing: "0.02em" }}
             >
               <tspan fill="#999">{axis.short}</tspan>
               {rating !== null && (
-                <tspan fill={color} fontWeight={800} dx="4">{rating}</tspan>
+                <tspan fill={color} fontWeight={800} dx="3">{rating}</tspan>
               )}
             </text>
           );
