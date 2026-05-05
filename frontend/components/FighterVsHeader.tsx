@@ -64,7 +64,7 @@ function FlagImg({ src, alt }: { src: string; alt: string }) {
     <img
       src={src}
       alt={alt}
-      className="inline-block w-4 h-3 align-[-2px] mr-1 rounded-[1px]"
+      className="inline-block w-4 h-3 align-[-2px] rounded-[1px]"
       onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
     />
   );
@@ -80,30 +80,43 @@ function FighterDetails({
   const i = data?.intangibles;
   if (!i) return null;
 
-  const segments: { flagSrc?: string | null; text: string }[] = [];
+  const lines: { label: string; value: string; flagSrc?: string | null }[] = [];
   if (i.nationality) {
-    segments.push({ flagSrc: flagSvgUrlFromCountry(i.nationality), text: i.nationality });
+    lines.push({
+      label: "From",
+      value: i.nationality,
+      flagSrc: flagSvgUrlFromCountry(i.nationality),
+    });
   }
   if (i.fights_out_of) {
-    segments.push({ flagSrc: flagSvgUrlFromLocation(i.fights_out_of), text: i.fights_out_of });
+    lines.push({
+      label: "Fighting Out of",
+      value: i.fights_out_of,
+      flagSrc: flagSvgUrlFromLocation(i.fights_out_of),
+    });
   }
   if (i.camp) {
-    segments.push({ text: i.camp });
+    lines.push({ label: "Team", value: i.camp });
   }
-  if (!segments.length) return null;
+  if (!lines.length) return null;
 
   return (
-    <p
-      className={`text-xs text-white/90 leading-relaxed mt-1 ${align === "right" ? "text-right" : "text-left"}`}
-    >
-      {segments.map((seg, idx) => (
-        <span key={idx}>
-          {idx > 0 && <span className="text-ufc-muted mx-1.5">·</span>}
-          {seg.flagSrc && <FlagImg src={seg.flagSrc} alt="" />}
-          <span className="text-white">{seg.text}</span>
-        </span>
+    <div className={`flex flex-col gap-1 mt-2 w-full ${align === "right" ? "items-end" : "items-start"}`}>
+      {lines.map((line, idx) => (
+        <div
+          key={idx}
+          className={`text-xs text-white leading-snug ${align === "right" ? "text-right" : "text-left"}`}
+        >
+          {line.label} {line.value}
+          {line.flagSrc && (
+            <>
+              {" "}
+              <FlagImg src={line.flagSrc} alt="" />
+            </>
+          )}
+        </div>
       ))}
-    </p>
+    </div>
   );
 }
 
