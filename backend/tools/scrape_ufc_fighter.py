@@ -41,21 +41,31 @@ def find_fighter_url(name: str, debug: bool = False) -> tuple[str, str]:
     Returns (profile_url, matched_full_name).
     Raises ValueError if not found.
     """
-    parts = name.strip().split()
-    last_initial = parts[-1][0].lower() if parts else "a"
+    # Strip quoted nicknames like Waldo "Salsa Boy" Cortes-Acosta → Waldo Cortes-Acosta
+    cleaned = re.sub(r'\s*"[^"]+"\s*', ' ', name).strip()
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    parts = cleaned.split()
+    if not parts:
+        raise ValueError(f'Empty fighter name')
 
-    search_url = f"http://www.ufcstats.com/statistics/fighters?char={last_initial}&page=all"
-    print(f"  Searching: {search_url}")
+    # UFCStats indexes by first letter of last name. For multi-word last names
+    # ("Cortes-Acosta", "De Ridder"), the dash/space ambiguity can shift which
+    # alphabet page actually lists the fighter. Try the obvious initial first,
+    # fall back to the initials of every word in the name except the first.
+    primary_initial = parts[-1][0].lower()
+    fallback_initials = []
+    for p in parts[1:]:
+        ch = p[0].lower()
+        if ch != primary_initial and ch.isalpha() and ch not in fallback_initials:
+            fallback_initials.append(ch)
 
-    html = _get(search_url)
-    time.sleep(DELAY)
+    def _norm(s: str) -> str:
+        # Punctuation-insensitive: "Cortes-Acosta" and "Cortes Acosta" both → "cortesacosta"
+        return re.sub(r"[^a-z0-9]", "", s.lower())
 
-    if debug:
-        print("\n--- RAW SEARCH HTML (first 3000 chars) ---")
-        print(html[:3000])
-        print("--- END ---\n")
+    name_norm = _norm(cleaned)
+    input_words = set(cleaned.lower().split())
 
-    # Each fighter row has: first name cell, last name cell, nickname cell — all same URL
     row_pattern = re.compile(
         r'<tr[^>]*class="b-statistics__table-row"[^>]*>(.*?)</tr>',
         re.DOTALL,
@@ -64,55 +74,67 @@ def find_fighter_url(name: str, debug: bool = False) -> tuple[str, str]:
         r'<a[^>]+href="(http://www\.ufcstats\.com/fighter-details/[a-f0-9]+)"[^>]*>\s*([^<\n]+?)\s*</a>'
     )
 
-    candidates: list[tuple[str, str]] = []  # (url, full_name)
+    all_candidates: list[tuple[str, str]] = []
     seen_urls: set[str] = set()
 
-    for row_match in row_pattern.finditer(html):
-        row_html = row_match.group(1)
-        links = link_pattern.findall(row_html)
-        if not links:
-            continue
+    for initial in [primary_initial, *fallback_initials]:
+        search_url = f"http://www.ufcstats.com/statistics/fighters?char={initial}&page=all"
+        print(f"  Searching: {search_url}")
 
-        # All links in the row share the same URL; first = first name, second = last name
-        url = links[0][0]
-        if url in seen_urls:
-            continue
-        seen_urls.add(url)
+        html = _get(search_url)
+        time.sleep(DELAY)
 
-        first = links[0][1].strip() if len(links) > 0 else ""
-        last  = links[1][1].strip() if len(links) > 1 else ""
-        full  = f"{first} {last}".strip()
+        if debug:
+            print("\n--- RAW SEARCH HTML (first 3000 chars) ---")
+            print(html[:3000])
+            print("--- END ---\n")
 
-        if full:
-            candidates.append((url, full))
+        for row_match in row_pattern.finditer(html):
+            row_html = row_match.group(1)
+            links = link_pattern.findall(row_html)
+            if not links:
+                continue
 
-    if not candidates:
-        raise ValueError(
-            f'Fighter "{name}" not found — no fighters parsed from search page.\n'
-            f'Run with --debug to inspect raw HTML.'
-        )
+            url = links[0][0]
+            if url in seen_urls:
+                continue
+            seen_urls.add(url)
 
-    name_lower = name.strip().lower()
-    input_words = set(name_lower.split())
+            first = links[0][1].strip() if len(links) > 0 else ""
+            last  = links[1][1].strip() if len(links) > 1 else ""
+            full  = f"{first} {last}".strip()
 
-    # 1. Exact full-name match
-    for url, full in candidates:
-        if full.lower() == name_lower:
+            if full:
+                all_candidates.append((url, full))
+
+        # Match attempts on the candidates we have so far
+        # 1. Exact full-name match (case-insensitive)
+        for url, full in all_candidates:
+            if full.lower() == cleaned.lower():
+                return url, full
+
+        # 2. Punctuation-insensitive full-name match — handles
+        #    "Waldo Cortes-Acosta" vs UFCStats' "Waldo Cortes Acosta"
+        for url, full in all_candidates:
+            if _norm(full) == name_norm:
+                return url, full
+
+        # 3. All input words present in candidate (set-equality after splitting on punctuation)
+        for url, full in all_candidates:
+            cand_words = set(re.split(r"[\s\-]+", full.lower()))
+            if input_words.issubset(cand_words):
+                return url, full
+
+    # 4. Last-resort fuzzy: candidate's normalized form contains all input letters in order
+    for url, full in all_candidates:
+        if name_norm and name_norm in _norm(full):
             return url, full
 
-    # 2. All input words present
-    partial = [(url, full) for url, full in candidates
-               if input_words.issubset(set(full.lower().split()))]
-    if len(partial) == 1:
-        return partial[0]
-    if len(partial) > 1:
-        return min(partial, key=lambda x: len(x[1]))
-
-    # 3. Last name contains match
-    last_word = parts[-1].lower()
-    fuzzy = [(url, full) for url, full in candidates if last_word in full.lower()]
-    if fuzzy:
-        return fuzzy[0]
+    if not all_candidates:
+        raise ValueError(
+            f'Fighter "{name}" not found — no fighters parsed from search pages.\n'
+            f'Run with --debug to inspect raw HTML.'
+        )
 
     raise ValueError(
         f'Fighter "{name}" not found on ufcstats.com.\n'
