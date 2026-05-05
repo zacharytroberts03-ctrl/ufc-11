@@ -96,7 +96,7 @@ function FighterDetails({
     });
   }
   if (i.camp) {
-    lines.push({ label: "Team", value: i.camp });
+    lines.push({ label: "Team :", value: i.camp });
   }
   if (!lines.length) return null;
 

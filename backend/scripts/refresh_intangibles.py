@@ -17,6 +17,8 @@ PROJECT_DIR = os.path.abspath(os.path.join(BACKEND_DIR, os.pardir))
 sys.path.insert(0, os.path.join(BACKEND_DIR, "tools"))
 
 from scrape_tapology import scrape_tapology_intangibles
+sys.path.insert(0, BACKEND_DIR)
+from agents.fighter_overrides import apply_intangibles_overrides
 
 ANALYSES_PATH = os.path.join(PROJECT_DIR, "frontend", "public", "data", "analyses.json")
 
@@ -58,7 +60,9 @@ def main() -> int:
             for k, v in fresh.items():
                 if v is not None:
                     merged[k] = v
-            fdata["intangibles"] = merged
+            # Manual overrides for fields the scraper can't fill (e.g., Tapology
+            # has empty Affiliation for some fighters).
+            fdata["intangibles"] = apply_intangibles_overrides(name, merged)
             fight[side] = fdata
 
     with open(ANALYSES_PATH, "w", encoding="utf-8") as f:
