@@ -1,5 +1,5 @@
 import { resolvePhotoUrl } from "@/lib/photoUrl";
-import { flagEmojiFromCountry, flagEmojiFromLocation } from "@/lib/flagEmoji";
+import { flagSvgUrlFromCountry, flagSvgUrlFromLocation } from "@/lib/flagEmoji";
 import FighterDecagon from "./FighterDecagon";
 import type { AnalysisResult, FighterData } from "@/lib/types";
 
@@ -58,21 +58,15 @@ function FighterPhoto({
   );
 }
 
-function InfoLine({
-  flag,
-  text,
-  align,
-}: {
-  flag?: string | null;
-  text: string;
-  align: "left" | "right";
-}) {
+function FlagImg({ src, alt }: { src: string; alt: string }) {
+  /* eslint-disable-next-line @next/next/no-img-element */
   return (
-    <div className={`flex items-center gap-1.5 max-w-full ${align === "right" ? "justify-end" : "justify-start"}`}>
-      {align === "left" && flag && <span className="text-base leading-none">{flag}</span>}
-      <span className="text-xs text-white leading-snug">{text}</span>
-      {align === "right" && flag && <span className="text-base leading-none">{flag}</span>}
-    </div>
+    <img
+      src={src}
+      alt={alt}
+      className="inline-block w-4 h-3 align-[-2px] mr-1 rounded-[1px]"
+      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+    />
   );
 }
 
@@ -85,35 +79,31 @@ function FighterDetails({
 }) {
   const i = data?.intangibles;
   if (!i) return null;
-  const nationality = i.nationality || undefined;
-  const fightsOutOf = i.fights_out_of || undefined;
-  const camp = i.camp || undefined;
 
-  if (!nationality && !fightsOutOf && !camp) return null;
+  const segments: { flagSrc?: string | null; text: string }[] = [];
+  if (i.nationality) {
+    segments.push({ flagSrc: flagSvgUrlFromCountry(i.nationality), text: i.nationality });
+  }
+  if (i.fights_out_of) {
+    segments.push({ flagSrc: flagSvgUrlFromLocation(i.fights_out_of), text: i.fights_out_of });
+  }
+  if (i.camp) {
+    segments.push({ text: i.camp });
+  }
+  if (!segments.length) return null;
 
   return (
-    <div className={`flex flex-col gap-1 mt-1 w-full ${align === "right" ? "items-end" : "items-start"}`}>
-      {nationality && (
-        <InfoLine
-          flag={flagEmojiFromCountry(nationality)}
-          text={`From ${nationality}`}
-          align={align}
-        />
-      )}
-      {fightsOutOf && (
-        <InfoLine
-          flag={flagEmojiFromLocation(fightsOutOf)}
-          text={`Fighting Out of ${fightsOutOf}`}
-          align={align}
-        />
-      )}
-      {camp && (
-        <InfoLine
-          text={`Camp: ${camp}`}
-          align={align}
-        />
-      )}
-    </div>
+    <p
+      className={`text-xs text-white/90 leading-relaxed mt-1 ${align === "right" ? "text-right" : "text-left"}`}
+    >
+      {segments.map((seg, idx) => (
+        <span key={idx}>
+          {idx > 0 && <span className="text-ufc-muted mx-1.5">·</span>}
+          {seg.flagSrc && <FlagImg src={seg.flagSrc} alt="" />}
+          <span className="text-white">{seg.text}</span>
+        </span>
+      ))}
+    </p>
   );
 }
 

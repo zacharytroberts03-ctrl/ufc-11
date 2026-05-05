@@ -101,6 +101,29 @@ export function flagEmojiFromCountry(country: string | undefined | null): string
   return String.fromCodePoint(...codePoints);
 }
 
+// SVG flag from Twemoji's CDN. Used because Windows Segoe UI Emoji renders
+// flag regional-indicator pairs as letters ("RU", "AE", "US") instead of
+// actual flag glyphs. The SVG approach gives consistent flag visuals on
+// every OS / browser combination.
+export function flagSvgUrlFromCountry(country: string | undefined | null): string | null {
+  if (!country) return null;
+  const code = COUNTRY_TO_CODE[country.trim()];
+  if (!code) return null;
+  // Each ISO letter maps to a Unicode regional-indicator codepoint
+  // (A = U+1F1E6 ... Z = U+1F1FF). Twemoji file names use those codepoints
+  // joined by hyphens, lowercase hex.
+  const filename = code
+    .toUpperCase()
+    .split("")
+    .map((c) => (0x1f1e6 + c.charCodeAt(0) - 65).toString(16))
+    .join("-");
+  return `https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/${filename}.svg`;
+}
+
+export function flagSvgUrlFromLocation(location: string | undefined | null): string | null {
+  return flagSvgUrlFromCountry(countryFromLocation(location));
+}
+
 // US-state fallback: Tapology often writes "Las Vegas, Nevada" without
 // trailing country, so a state name should still resolve to the US flag.
 const US_STATES = new Set([
