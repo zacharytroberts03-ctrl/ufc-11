@@ -7,6 +7,7 @@ import type { AnalysisResult } from "@/lib/types";
 import FighterVsHeader from "@/components/FighterVsHeader";
 import DecagonKey from "@/components/DecagonKey";
 import AnalysisSection from "@/components/AnalysisSection";
+import FavoriteFighterPanel from "@/components/FavoriteFighterPanel";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function FightDetailPage() {
@@ -167,14 +168,15 @@ export default function FightDetailPage() {
                 accentColor="gold"
               />
             )}
-            {sections.betting && (
+            {analysis?.bets?.moneyline?.pick && (
               <AnalysisSection
-                title="Betting Recommendation"
-                content={sections.betting}
-                icon="💰"
+                title="The Favorite Fighter"
+                icon="🏆"
                 defaultOpen={false}
                 accentColor="green"
-              />
+              >
+                <FavoriteFighterPanel bets={analysis.bets} />
+              </AnalysisSection>
             )}
           </div>
         ) : (

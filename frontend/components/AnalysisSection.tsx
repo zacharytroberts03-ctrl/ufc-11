@@ -5,7 +5,8 @@ import ReactMarkdown from "react-markdown";
 
 interface Props {
   title: string;
-  content: string;
+  content?: string;
+  children?: React.ReactNode;
   icon?: string;
   defaultOpen?: boolean;
   accentColor?: "red" | "gold" | "green";
@@ -14,6 +15,7 @@ interface Props {
 export default function AnalysisSection({
   title,
   content,
+  children,
   icon = "🥊",
   defaultOpen = false,
   accentColor = "red",
@@ -62,9 +64,13 @@ export default function AnalysisSection({
 
       {open && (
         <div className={`px-5 pb-5 border-t border-ufc-border/50 border-l-4 ${leftBorder}`}>
-          <div className="markdown-content pt-4">
-            <ReactMarkdown>{content}</ReactMarkdown>
-          </div>
+          {content ? (
+            <div className="markdown-content pt-4">
+              <ReactMarkdown>{content}</ReactMarkdown>
+            </div>
+          ) : (
+            <div className="pt-4">{children}</div>
+          )}
         </div>
       )}
     </div>
