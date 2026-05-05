@@ -9,11 +9,11 @@ interface Props {
 
 function Row({ short, full, color }: { short: string; full: string; color: string }) {
   return (
-    <div className="flex items-baseline gap-2.5 py-1">
-      <span className="font-black text-xs tracking-wider w-14 flex-shrink-0" style={{ color }}>
+    <div className="flex items-baseline gap-2.5">
+      <span className="font-black text-sm tracking-wider w-14 flex-shrink-0" style={{ color }}>
         {short}
       </span>
-      <span className="text-xs text-ufc-muted">{full}</span>
+      <span className="text-sm text-ufc-muted">{full}</span>
     </div>
   );
 }
@@ -27,19 +27,19 @@ export default function DecagonKey({ side }: Props) {
 
   return (
     <aside
-      className="rounded-xl p-3 sm:p-4 h-full"
+      className="rounded-xl p-4 sm:p-5 w-full flex flex-col"
       style={{
         background: "linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%)",
         border: "1px solid #2a2a2a",
       }}
     >
-      <div className="flex items-center justify-between mb-2.5">
-        <h3 className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: accent }}>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-[11px] font-black tracking-[0.25em] uppercase" style={{ color: accent }}>
           {heading}
         </h3>
-        <span className="text-[9px] text-ufc-muted">1–10</span>
+        <span className="text-[10px] text-ufc-muted">1–10</span>
       </div>
-      <div>
+      <div className="flex flex-col justify-around flex-1 gap-1">
         {items.map((a) => (
           <Row
             key={a.short}
