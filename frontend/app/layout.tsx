@@ -10,7 +10,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "UFC Fight Analyzer",
-  description: "AI-powered UFC fight analysis and hedge betting calculator",
+  description: "UFC fight analysis and hedge betting calculator",
 };
 
 export default function RootLayout({
@@ -32,12 +32,7 @@ export default function RootLayout({
                 Fight Analyzer
               </span>
             </a>
-            <div className="flex items-center gap-3">
-              <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-ufc-muted">
-                <span className="w-1.5 h-1.5 rounded-full bg-ufc-green animate-pulse" />
-                Live odds · AI analysis
-              </span>
-            </div>
+            <div className="flex items-center gap-3" />
           </div>
         </header>
 
@@ -46,7 +41,7 @@ export default function RootLayout({
         </main>
 
         <footer className="border-t-2 border-ufc-red mt-16 py-8 text-center text-ufc-muted text-xs">
-          Stats from ufcstats.com · AI by Claude · Odds from The Odds API
+          Stats from ufcstats.com · Odds from The Odds API
         </footer>
       </body>
     </html>

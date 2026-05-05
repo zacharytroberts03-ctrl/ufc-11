@@ -51,7 +51,7 @@ export default function FightDetailPage() {
   const sections = analysis?.analysis_sections ?? {};
 
   return (
-    <div className="max-w-4xl mx-auto animate-fade-in">
+    <div className="max-w-7xl mx-auto animate-fade-in">
       {/* Back button */}
       <button
         onClick={() => router.push("/")}
@@ -68,25 +68,50 @@ export default function FightDetailPage() {
         Fight Card
       </button>
 
-      {/* Fighter VS Header */}
-      <FighterVsHeader
-        f1Name={f1}
-        f2Name={f2}
-        f1Img={f1Img}
-        f2Img={f2Img}
-        f1Debut={analysis?.f1_data?.ufc_debut}
-        f2Debut={analysis?.f2_data?.ufc_debut}
-        specialistReports={analysis?.specialist_reports}
-      />
-
-      {/* Decagon acronym legend */}
-      {analysis?.specialist_reports && <DecagonKey />}
+      {/* Fighter VS Header with flanking decagon keys (offense left, defense right) */}
+      {analysis?.specialist_reports ? (
+        <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr_180px] gap-4 mb-6 items-stretch">
+          <div className="hidden lg:block">
+            <DecagonKey side="offense" />
+          </div>
+          <div className="max-w-4xl w-full mx-auto lg:mx-0">
+            <FighterVsHeader
+              f1Name={f1}
+              f2Name={f2}
+              f1Img={f1Img}
+              f2Img={f2Img}
+              f1Debut={analysis?.f1_data?.ufc_debut}
+              f2Debut={analysis?.f2_data?.ufc_debut}
+              specialistReports={analysis?.specialist_reports}
+            />
+          </div>
+          <div className="hidden lg:block">
+            <DecagonKey side="defense" />
+          </div>
+          {/* Mobile/tablet fallback: keys side-by-side below the header */}
+          <div className="grid grid-cols-2 gap-3 lg:hidden">
+            <DecagonKey side="offense" />
+            <DecagonKey side="defense" />
+          </div>
+        </div>
+      ) : (
+        <div className="max-w-4xl mx-auto">
+          <FighterVsHeader
+            f1Name={f1}
+            f2Name={f2}
+            f1Img={f1Img}
+            f2Img={f2Img}
+            f1Debut={analysis?.f1_data?.ufc_debut}
+            f2Debut={analysis?.f2_data?.ufc_debut}
+          />
+        </div>
+      )}
 
       {/* Analysis Section */}
       <div className="mt-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-black text-ufc-text uppercase tracking-wider">
-            AI Fight Analysis
+            Fight Analysis
           </h2>
           {analysis && (
             <span className="text-xs text-ufc-muted">
@@ -158,7 +183,7 @@ export default function FightDetailPage() {
               No analysis yet
             </h3>
             <p className="text-ufc-muted text-sm mb-6">
-              Run the AI analysis to get fighter profiles, head-to-head breakdown,
+              Run the analysis to get fighter profiles, head-to-head breakdown,
               predicted endings, and betting recommendations.
             </p>
 

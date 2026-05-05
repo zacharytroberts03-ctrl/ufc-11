@@ -1,13 +1,16 @@
 import { AXES } from "./FighterDecagon";
 
-// Splits the 10 axes into offense (O- prefix) and defense (D- prefix) columns.
 const OFFENSE = AXES.filter((a) => a.short.startsWith("O-"));
 const DEFENSE = AXES.filter((a) => a.short.startsWith("D-"));
 
-function Row({ short, full }: { short: string; full: string }) {
+interface Props {
+  side: "offense" | "defense";
+}
+
+function Row({ short, full, color }: { short: string; full: string; color: string }) {
   return (
-    <div className="flex items-baseline gap-3 py-1">
-      <span className="font-black text-ufc-red text-xs tracking-wider w-14 flex-shrink-0">
+    <div className="flex items-baseline gap-2.5 py-1">
+      <span className="font-black text-xs tracking-wider w-14 flex-shrink-0" style={{ color }}>
         {short}
       </span>
       <span className="text-xs text-ufc-muted">{full}</span>
@@ -15,38 +18,36 @@ function Row({ short, full }: { short: string; full: string }) {
   );
 }
 
-export default function DecagonKey() {
+export default function DecagonKey({ side }: Props) {
+  const isOffense = side === "offense";
+  const items = isOffense ? OFFENSE : DEFENSE;
+  const heading = isOffense ? "Offense" : "Defense";
+  const accent = isOffense ? "#dc0000" : "#d4af37";
+  const stripSuffix = isOffense ? " Offense" : " Defense";
+
   return (
     <aside
-      className="rounded-xl p-4 sm:p-5 mb-6"
+      className="rounded-xl p-3 sm:p-4 h-full"
       style={{
         background: "linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%)",
         border: "1px solid #2a2a2a",
       }}
     >
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-[11px] font-black tracking-[0.25em] text-white uppercase">
-          Chart Key
+      <div className="flex items-center justify-between mb-2.5">
+        <h3 className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: accent }}>
+          {heading}
         </h3>
-        <span className="text-[10px] text-ufc-muted">10 specialist agents · 1–10 scale</span>
+        <span className="text-[9px] text-ufc-muted">1–10</span>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
-        <div>
-          <div className="text-[10px] font-black tracking-widest text-ufc-red mb-1.5 uppercase">
-            Offense
-          </div>
-          {OFFENSE.map((a) => (
-            <Row key={a.short} short={a.short} full={a.full.replace(" Offense", "")} />
-          ))}
-        </div>
-        <div>
-          <div className="text-[10px] font-black tracking-widest mb-1.5 uppercase" style={{ color: "#d4af37" }}>
-            Defense
-          </div>
-          {DEFENSE.map((a) => (
-            <Row key={a.short} short={a.short} full={a.full.replace(" Defense", "")} />
-          ))}
-        </div>
+      <div>
+        {items.map((a) => (
+          <Row
+            key={a.short}
+            short={a.short}
+            full={a.full.replace(stripSuffix, "")}
+            color={accent}
+          />
+        ))}
       </div>
     </aside>
   );

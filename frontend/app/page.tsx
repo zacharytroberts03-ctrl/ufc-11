@@ -39,14 +39,10 @@ export default function HomePage() {
     return (
       <div className="text-center py-20">
         <div className="text-ufc-red text-4xl mb-4">⚠</div>
-        <h2 className="text-ufc-text font-bold text-lg mb-2">Backend Offline</h2>
+        <h2 className="text-white font-bold text-lg mb-2">Card data unavailable</h2>
         <p className="text-ufc-muted text-sm mb-6">
-          Make sure the FastAPI backend is running:
+          The latest card data could not be loaded. Please try again in a moment.
         </p>
-        <code className="bg-ufc-surface border border-ufc-border rounded-lg px-4 py-3 text-ufc-gold text-sm block max-w-md mx-auto">
-          cd &quot;AI Websites/UFC 11/backend&quot;<br />
-          uvicorn main:app --reload
-        </code>
       </div>
     );
   }
