@@ -98,6 +98,50 @@ export interface FighterData {
   dob?: string;
 }
 
+export interface DomainAdvantage {
+  f1_offense: number | null;
+  f2_defense: number | null;
+  f2_offense: number | null;
+  f1_defense: number | null;
+  f1_pressure: number | null;
+  f2_pressure: number | null;
+  advantage: number | null; // >0 favors f1, <0 favors f2
+}
+
+export interface DomainAdvantages {
+  striking?: DomainAdvantage;
+  wrestling?: DomainAdvantage;
+  takedowns?: DomainAdvantage;
+  grappling?: DomainAdvantage;
+  submissions?: DomainAdvantage;
+}
+
+export interface BetsObject {
+  moneyline?: {
+    pick?: string;
+    win_prob?: number;
+    confidence?: "high" | "medium" | "low";
+    key_thesis?: string;
+  };
+  method?: {
+    ko_tko?: number;
+    submission?: number;
+    decision?: number;
+  };
+  distance?: {
+    goes_to_decision?: number;
+    ends_inside_distance?: number;
+  };
+  rounds?: {
+    ends_round_1?: number;
+    ends_round_2?: number;
+    ends_round_3?: number;
+    ends_round_4_or_later?: number;
+  };
+  supporting_specialists?: string[];
+  domain_summary?: Record<string, string>;
+}
+
 export interface AnalysisResult {
   f1_name: string;
   f2_name: string;
@@ -114,6 +158,25 @@ export interface AnalysisResult {
     endings?: string;
     betting?: string;
   };
+  // New fields from the agent-based pipeline. Optional so older cached
+  // analyses (pre-2026-05-05) still render.
+  bets?: BetsObject;
+  domain_advantages?: DomainAdvantages;
+  aggregator_model?: string;
+  specialist_reports?: Record<
+    string,
+    Record<
+      string,
+      {
+        report?: {
+          rating_1_to_10?: number;
+          [key: string]: unknown;
+        };
+        narrative?: string;
+        [key: string]: unknown;
+      }
+    >
+  >;
   raw_analysis?: string;
   total_stake: number;
   generated_at: string;

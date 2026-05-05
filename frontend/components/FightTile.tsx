@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { Fight } from "@/lib/types";
+import { resolvePhotoUrl } from "@/lib/photoUrl";
 
 interface Props {
   fight: Fight;
@@ -17,9 +18,7 @@ function FighterPhoto({
   name: string;
   isMainEvent?: boolean;
 }) {
-  const src = img?.startsWith("/fighter_photos")
-    ? `http://localhost:8000${img}`
-    : img;
+  const src = resolvePhotoUrl(img, name);
 
   const sizeClass = isMainEvent ? "w-14 h-14" : "w-12 h-12";
   const borderClass = isMainEvent

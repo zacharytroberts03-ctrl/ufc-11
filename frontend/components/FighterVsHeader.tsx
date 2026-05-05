@@ -1,3 +1,10 @@
+import { resolvePhotoUrl } from "@/lib/photoUrl";
+import FighterDecagon from "./FighterDecagon";
+import type { AnalysisResult } from "@/lib/types";
+
+const F1_COLOR = "#dc0000";  // UFC red
+const F2_COLOR = "#d4af37";  // UFC gold
+
 interface Props {
   f1Name: string;
   f2Name: string;
@@ -5,58 +12,44 @@ interface Props {
   f2Img?: string | null;
   f1Debut?: boolean;
   f2Debut?: boolean;
+  specialistReports?: AnalysisResult["specialist_reports"];
 }
 
-function FighterSlot({
+function FighterPhoto({
   name,
   img,
-  isDebut,
-  align,
+  borderColor,
 }: {
   name: string;
-  img?: string | null;
-  isDebut?: boolean;
-  align: "left" | "right";
+  img: string | null;
+  borderColor: string;
 }) {
-  const imgSrc = img?.startsWith("/fighter_photos")
-    ? `http://localhost:8000${img}`
-    : img;
-
   return (
-    <div className={`flex flex-col items-center gap-3 ${align === "right" ? "items-end" : "items-start"} sm:items-center`}>
-      {/* Photo */}
-      <div className="relative">
-        {imgSrc ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            src={imgSrc}
-            alt={name}
-            className="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border-2 border-ufc-red shadow-xl"
-            onError={(e) => {
-              const el = e.target as HTMLImageElement;
-              el.style.display = "none";
-              el.nextElementSibling?.removeAttribute("style");
-            }}
-          />
-        ) : null}
-        <div
-          className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-ufc-elevated border-2 border-ufc-red flex items-center justify-center text-4xl font-black text-ufc-red"
-          style={imgSrc ? { display: "none" } : {}}
-        >
-          {name[0]}
-        </div>
-      </div>
-
-      {/* Name */}
-      <div className="text-center">
-        {isDebut && (
-          <span className="block text-[10px] font-black tracking-widest uppercase text-ufc-red mb-1">
-            UFC Debut
-          </span>
-        )}
-        <h2 className="text-lg sm:text-xl font-black text-ufc-text leading-tight text-center">
-          {name}
-        </h2>
+    <div className="relative">
+      {img && (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={img}
+          alt={name}
+          className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover shadow-lg"
+          style={{ border: `3px solid ${borderColor}` }}
+          onError={(e) => {
+            const el = e.target as HTMLImageElement;
+            el.style.display = "none";
+            el.nextElementSibling?.removeAttribute("style");
+          }}
+        />
+      )}
+      <div
+        className="w-24 h-24 sm:w-32 sm:h-32 rounded-full flex items-center justify-center text-3xl sm:text-4xl font-black"
+        style={{
+          display: img ? "none" : "flex",
+          backgroundColor: "#1a1a1a",
+          border: `3px solid ${borderColor}`,
+          color: borderColor,
+        }}
+      >
+        {name[0]}
       </div>
     </div>
   );
@@ -69,29 +62,80 @@ export default function FighterVsHeader({
   f2Img,
   f1Debut,
   f2Debut,
+  specialistReports,
 }: Props) {
-  return (
-    <div className="card p-6 sm:p-8 mb-6 border-2 border-ufc-red">
-      <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-center">
-        <FighterSlot
-          name={f1Name}
-          img={f1Img}
-          isDebut={f1Debut}
-          align="left"
-        />
+  const f1Photo = resolvePhotoUrl(f1Img, f1Name);
+  const f2Photo = resolvePhotoUrl(f2Img, f2Name);
 
-        <div className="flex flex-col items-center gap-1 px-2">
-          <span className="text-ufc-red text-2xl sm:text-3xl font-black tracking-widest">
-            VS
-          </span>
+  return (
+    <div
+      className="rounded-xl p-5 sm:p-7 mb-6 shadow-2xl"
+      style={{
+        background: "linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%)",
+        border: "2px solid #dc0000",
+      }}
+    >
+      {/* Desktop: two columns with VS in middle. Mobile: stack. */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-4 items-center">
+        {/* F1 side: photo + name on left, decagon on right */}
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex flex-col items-center gap-2 sm:items-start">
+            <FighterPhoto name={f1Name} img={f1Photo} borderColor={F1_COLOR} />
+            {f1Debut && (
+              <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded"
+                    style={{ backgroundColor: F1_COLOR, color: "#fff" }}>
+                UFC DEBUT
+              </span>
+            )}
+            <h2 className="text-lg sm:text-xl font-black text-white text-center sm:text-left leading-tight max-w-[10rem]">
+              {f1Name}
+            </h2>
+          </div>
+          <div className="flex-shrink-0">
+            <FighterDecagon
+              reports={specialistReports}
+              fighterName={f1Name}
+              color={F1_COLOR}
+              size={200}
+            />
+          </div>
         </div>
 
-        <FighterSlot
-          name={f2Name}
-          img={f2Img}
-          isDebut={f2Debut}
-          align="right"
-        />
+        {/* VS divider */}
+        <div className="flex items-center justify-center md:flex-col">
+          <div className="hidden md:block h-24 w-px bg-gradient-to-b from-transparent via-[#dc0000] to-transparent" />
+          <span
+            className="text-3xl sm:text-4xl font-black tracking-[0.2em] my-3"
+            style={{ color: F1_COLOR }}
+          >
+            VS
+          </span>
+          <div className="hidden md:block h-24 w-px bg-gradient-to-b from-transparent via-[#d4af37] to-transparent" />
+        </div>
+
+        {/* F2 side: decagon on left, photo + name on right (mirrored) */}
+        <div className="flex flex-col-reverse sm:flex-row items-center gap-4 md:justify-end">
+          <div className="flex-shrink-0">
+            <FighterDecagon
+              reports={specialistReports}
+              fighterName={f2Name}
+              color={F2_COLOR}
+              size={200}
+            />
+          </div>
+          <div className="flex flex-col items-center gap-2 sm:items-end">
+            <FighterPhoto name={f2Name} img={f2Photo} borderColor={F2_COLOR} />
+            {f2Debut && (
+              <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded"
+                    style={{ backgroundColor: F2_COLOR, color: "#1a1a1a" }}>
+                UFC DEBUT
+              </span>
+            )}
+            <h2 className="text-lg sm:text-xl font-black text-white text-center sm:text-right leading-tight max-w-[10rem]">
+              {f2Name}
+            </h2>
+          </div>
+        </div>
       </div>
     </div>
   );
