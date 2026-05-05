@@ -57,18 +57,62 @@ def _find_fighter_url(name: str) -> str | None:
     return BASE + m.group(1)
 
 
-def _parse_camp(html: str) -> str | None:
-    """Look for 'Affiliation' or 'Gym' labels in the fighter info block."""
-    for label in ("Affiliation", "Gym", "Team"):
-        m = re.search(
-            rf'>{label}\s*</[^>]+>\s*<[^>]+>([^<]+)<',
-            html,
-            re.IGNORECASE,
-        )
+# Tapology's fighter-info block format: `<strong>Label:</strong> <span>[<a>]Value[</a>]</span>`
+# This regex tolerates the colon, optional anchor tag wrapping, and surrounding whitespace.
+_LABEL_VALUE_RE = (
+    r'<strong>\s*{label}\s*:\s*</strong>\s*'
+    r'<[^>]+>\s*(?:<a[^>]*>\s*)?([^<]+?)\s*(?:</a>)?\s*<'
+)
+
+
+def _label_value(html: str, *labels: str) -> str | None:
+    for label in labels:
+        m = re.search(_LABEL_VALUE_RE.format(label=re.escape(label)), html, re.IGNORECASE)
         if m:
             val = m.group(1).strip()
-            if val and val.lower() not in ("n/a", "--", "none"):
+            if val and val.lower() not in ("n/a", "--", "none", "unknown"):
                 return val
+    return None
+
+
+def _parse_camp(html: str) -> str | None:
+    """Affiliation / Gym / Team — the fighter's training camp."""
+    return _label_value(html, "Affiliation", "Gym", "Team")
+
+
+def _parse_nationality(html: str) -> str | None:
+    """Country of origin from 'Born:' field. Born value is 'City, Region, Country';
+    we keep the last comma segment as the country."""
+    born = _label_value(html, "Born", "Birthplace")
+    if not born:
+        return _label_value(html, "Nationality", "Country", "Origin")
+    parts = [p.strip() for p in born.split(",") if p.strip()]
+    return parts[-1] if parts else None
+
+
+def _parse_fights_out_of(html: str) -> str | None:
+    """Training base / 'Fights Out Of'. Try labeled fields first, then meta description
+    ('Pro MMA Fighter out of <City, Country>') as a fallback."""
+    val = _label_value(
+        html,
+        "Fights Out Of",
+        "Fighting Out Of",
+        "Out Of",
+        "Based In",
+        "Residence",
+        "Lives In",
+    )
+    if val:
+        return val
+    m = re.search(
+        r"(?:Pro\s+)?MMA\s+Fighter\s+out\s+of\s+([^.'\"<]+?)(?=[.'\"<]|\s+View)",
+        html,
+        re.IGNORECASE,
+    )
+    if m:
+        loc = m.group(1).strip().rstrip(",")
+        if loc and loc.lower() not in ("n/a", "--", "none"):
+            return loc
     return None
 
 
@@ -99,6 +143,8 @@ def scrape_tapology_intangibles(name: str) -> dict:
 
         return {
             "camp": _parse_camp(html),
+            "nationality": _parse_nationality(html),
+            "fights_out_of": _parse_fights_out_of(html),
             "weight_miss_history": _parse_weight_misses(html),
             "short_notice": None,   # not derivable from Tapology page alone
             "notice_days": None,

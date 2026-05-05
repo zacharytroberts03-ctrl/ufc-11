@@ -82,6 +82,8 @@ export default function FightDetailPage() {
               f2Img={f2Img}
               f1Debut={analysis?.f1_data?.ufc_debut}
               f2Debut={analysis?.f2_data?.ufc_debut}
+              f1Data={analysis?.f1_data}
+              f2Data={analysis?.f2_data}
               specialistReports={analysis?.specialist_reports}
             />
           </div>

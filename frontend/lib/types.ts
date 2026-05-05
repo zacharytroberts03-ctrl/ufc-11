@@ -81,6 +81,16 @@ export interface FightHistoryEntry {
   date?: string;
 }
 
+export interface FighterIntangibles {
+  camp?: string | null;
+  nationality?: string | null;
+  fights_out_of?: string | null;
+  weight_miss_history?: string | null;
+  short_notice?: boolean | null;
+  notice_days?: number | null;
+  head_coach?: string | null;
+}
+
 export interface FighterData {
   name: string;
   record: FighterRecord;
@@ -96,6 +106,7 @@ export interface FighterData {
   debut_source?: string;
   photo_url?: string | null;
   dob?: string;
+  intangibles?: FighterIntangibles;
 }
 
 export interface DomainAdvantage {
