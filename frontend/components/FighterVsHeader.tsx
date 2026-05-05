@@ -31,7 +31,7 @@ function FighterPhoto({
         <img
           src={img}
           alt={name}
-          className="w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover shadow-lg"
+          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover shadow-lg"
           style={{ border: `3px solid ${borderColor}` }}
           onError={(e) => {
             const el = e.target as HTMLImageElement;
@@ -41,7 +41,7 @@ function FighterPhoto({
         />
       )}
       <div
-        className="w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-3xl sm:text-4xl font-black"
+        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center text-3xl sm:text-4xl font-black"
         style={{
           display: img ? "none" : "flex",
           backgroundColor: "#1a1a1a",

@@ -70,7 +70,7 @@ export default function FightDetailPage() {
 
       {/* Fighter VS Header with flanking decagon keys (offense left, defense right) */}
       {analysis?.specialist_reports ? (
-        <div className="grid grid-cols-1 lg:grid-cols-[140px_1fr_140px] gap-4 mb-6 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-[170px_1fr_170px] gap-4 mb-6 items-stretch">
           <div className="hidden lg:flex h-full">
             <DecagonKey side="offense" />
           </div>

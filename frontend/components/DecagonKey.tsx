@@ -9,11 +9,11 @@ interface Props {
 
 function Row({ short, full, color }: { short: string; full: string; color: string }) {
   return (
-    <div className="flex items-baseline gap-2.5">
-      <span className="font-black text-sm tracking-wider w-14 flex-shrink-0" style={{ color }}>
+    <div className="flex items-baseline gap-2 min-w-0">
+      <span className="font-black text-sm tracking-wider w-12 flex-shrink-0" style={{ color }}>
         {short}
       </span>
-      <span className="text-sm text-ufc-muted">{full}</span>
+      <span className="text-sm text-ufc-muted min-w-0 flex-1">{full}</span>
     </div>
   );
 }
