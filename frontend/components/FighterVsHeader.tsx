@@ -143,30 +143,32 @@ export default function FighterVsHeader({
       }}
     >
       {/* Desktop: two columns with VS in middle. Mobile: stack. */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-4 items-center">
-        {/* F1 side: photo + name + details on left, decagon on right */}
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-          <div className="flex flex-col items-center gap-2 sm:items-start min-w-0 max-w-[12rem]">
-            <FighterPhoto name={f1Name} img={f1Photo} borderColor={F1_COLOR} />
-            {f1Debut && (
-              <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded"
-                    style={{ backgroundColor: F1_COLOR, color: "#fff" }}>
-                UFC DEBUT
-              </span>
-            )}
-            <h2 className="text-lg sm:text-xl font-black text-white text-center sm:text-left leading-tight max-w-[12rem]">
-              {f1Name}
-            </h2>
-            <FighterDetails data={f1Data} align="left" />
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-4 md:items-start">
+        {/* F1 side: photo+name + decagon on top, details row below */}
+        <div className="flex flex-col gap-3 min-w-0">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex flex-col items-center gap-2 sm:items-start min-w-0 max-w-[12rem]">
+              <FighterPhoto name={f1Name} img={f1Photo} borderColor={F1_COLOR} />
+              {f1Debut && (
+                <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded"
+                      style={{ backgroundColor: F1_COLOR, color: "#fff" }}>
+                  UFC DEBUT
+                </span>
+              )}
+              <h2 className="text-lg sm:text-xl font-black text-white text-center sm:text-left leading-tight max-w-[12rem]">
+                {f1Name}
+              </h2>
+            </div>
+            <div className="flex-shrink-0">
+              <FighterDecagon
+                reports={specialistReports}
+                fighterName={f1Name}
+                color={F1_COLOR}
+                size={175}
+              />
+            </div>
           </div>
-          <div className="flex-shrink-0">
-            <FighterDecagon
-              reports={specialistReports}
-              fighterName={f1Name}
-              color={F1_COLOR}
-              size={175}
-            />
-          </div>
+          <FighterDetails data={f1Data} align="left" />
         </div>
 
         {/* VS divider */}
@@ -181,29 +183,31 @@ export default function FighterVsHeader({
           <div className="hidden md:block h-24 w-px bg-gradient-to-b from-transparent via-[#d4af37] to-transparent" />
         </div>
 
-        {/* F2 side: decagon on left, photo + name + details on right (mirrored) */}
-        <div className="flex flex-col-reverse sm:flex-row items-center gap-4 md:justify-end">
-          <div className="flex-shrink-0">
-            <FighterDecagon
-              reports={specialistReports}
-              fighterName={f2Name}
-              color={F2_COLOR}
-              size={175}
-            />
+        {/* F2 side: decagon + photo+name on top, details row below (mirrored) */}
+        <div className="flex flex-col gap-3 min-w-0">
+          <div className="flex flex-col-reverse sm:flex-row items-center gap-4 md:justify-end">
+            <div className="flex-shrink-0">
+              <FighterDecagon
+                reports={specialistReports}
+                fighterName={f2Name}
+                color={F2_COLOR}
+                size={175}
+              />
+            </div>
+            <div className="flex flex-col items-center gap-2 sm:items-end min-w-0 max-w-[12rem]">
+              <FighterPhoto name={f2Name} img={f2Photo} borderColor={F2_COLOR} />
+              {f2Debut && (
+                <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded"
+                      style={{ backgroundColor: F2_COLOR, color: "#1a1a1a" }}>
+                  UFC DEBUT
+                </span>
+              )}
+              <h2 className="text-lg sm:text-xl font-black text-white text-center sm:text-right leading-tight max-w-[12rem]">
+                {f2Name}
+              </h2>
+            </div>
           </div>
-          <div className="flex flex-col items-center gap-2 sm:items-end min-w-0 max-w-[12rem]">
-            <FighterPhoto name={f2Name} img={f2Photo} borderColor={F2_COLOR} />
-            {f2Debut && (
-              <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded"
-                    style={{ backgroundColor: F2_COLOR, color: "#1a1a1a" }}>
-                UFC DEBUT
-              </span>
-            )}
-            <h2 className="text-lg sm:text-xl font-black text-white text-center sm:text-right leading-tight max-w-[12rem]">
-              {f2Name}
-            </h2>
-            <FighterDetails data={f2Data} align="right" />
-          </div>
+          <FighterDetails data={f2Data} align="right" />
         </div>
       </div>
     </div>
