@@ -134,7 +134,7 @@ export default function FightDetailPage() {
                     title={`${f1} — Style & Profile`}
                     content={sections.f1_profile}
                     icon="⚡"
-                    defaultOpen={true}
+                    defaultOpen={false}
                     accentColor="red"
                   />
                 )}
@@ -143,7 +143,7 @@ export default function FightDetailPage() {
                     title={`${f2} — Style & Profile`}
                     content={sections.f2_profile}
                     icon="⚡"
-                    defaultOpen={true}
+                    defaultOpen={false}
                     accentColor="red"
                   />
                 )}
@@ -154,7 +154,7 @@ export default function FightDetailPage() {
                 title="Head-to-Head Breakdown"
                 content={sections.head2head}
                 icon="🥊"
-                defaultOpen={true}
+                defaultOpen={false}
                 accentColor="gold"
               />
             )}
