@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { fetchCachedAnalysis, runAnalysis, fetchFighter } from "@/lib/api";
 import type { AnalysisResult } from "@/lib/types";
 import FighterVsHeader from "@/components/FighterVsHeader";
+import DecagonKey from "@/components/DecagonKey";
 import AnalysisSection from "@/components/AnalysisSection";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -77,6 +78,9 @@ export default function FightDetailPage() {
         f2Debut={analysis?.f2_data?.ufc_debut}
         specialistReports={analysis?.specialist_reports}
       />
+
+      {/* Decagon acronym legend */}
+      {analysis?.specialist_reports && <DecagonKey />}
 
       {/* Analysis Section */}
       <div className="mt-8">

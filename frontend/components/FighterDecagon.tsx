@@ -1,18 +1,19 @@
 import type { AnalysisResult } from "@/lib/types";
 
-// Ordered the way they read on the chart: offense top-half, defense bottom-half.
-// Starting at top (12 o'clock) and going clockwise.
-const AXES = [
-  { agent: "ufc-striking-offense",   short: "STR", full: "Striking Off" },
-  { agent: "ufc-wrestling-offense",  short: "WRS", full: "Wrestling Off" },
-  { agent: "ufc-takedown-offense",   short: "TKD", full: "Takedown Off" },
-  { agent: "ufc-grappling-offense",  short: "GRP", full: "Grappling Off" },
-  { agent: "ufc-submission-offense", short: "SUB", full: "Submission Off" },
-  { agent: "ufc-submission-defense", short: "SUB", full: "Submission Def" },
-  { agent: "ufc-grappling-defense",  short: "GRP", full: "Grappling Def" },
-  { agent: "ufc-takedown-defense",   short: "TKD", full: "Takedown Def" },
-  { agent: "ufc-wrestling-defense",  short: "WRS", full: "Wrestling Def" },
-  { agent: "ufc-striking-defense",   short: "STR", full: "Striking Def" },
+// Unique acronyms — O- prefix for offense, D- prefix for defense — so no two
+// axes share a label. Order: 5 offense (top half clockwise from top), 5 defense
+// (bottom half continuing clockwise back to top-left).
+export const AXES = [
+  { agent: "ufc-striking-offense",   short: "O-STR", full: "Striking Offense" },
+  { agent: "ufc-wrestling-offense",  short: "O-WRS", full: "Wrestling Offense" },
+  { agent: "ufc-takedown-offense",   short: "O-TKD", full: "Takedown Offense" },
+  { agent: "ufc-grappling-offense",  short: "O-GRP", full: "Grappling Offense" },
+  { agent: "ufc-submission-offense", short: "O-SUB", full: "Submission Offense" },
+  { agent: "ufc-submission-defense", short: "D-SUB", full: "Submission Defense" },
+  { agent: "ufc-grappling-defense",  short: "D-GRP", full: "Grappling Defense" },
+  { agent: "ufc-takedown-defense",   short: "D-TKD", full: "Takedown Defense" },
+  { agent: "ufc-wrestling-defense",  short: "D-WRS", full: "Wrestling Defense" },
+  { agent: "ufc-striking-defense",   short: "D-STR", full: "Striking Defense" },
 ] as const;
 
 type Reports = AnalysisResult["specialist_reports"];
@@ -31,10 +32,13 @@ function extractRatings(reports: Reports | undefined, fighterName: string): (num
 interface Props {
   reports?: Reports;
   fighterName: string;
-  color: string;       // hex stroke + fill (with alpha applied internally)
-  size?: number;       // px
+  color: string;
+  size?: number;
   showLabels?: boolean;
 }
+
+// Padding around the chart so labels at the edges don't clip.
+const PAD = 28;
 
 export default function FighterDecagon({
   reports,
@@ -44,18 +48,18 @@ export default function FighterDecagon({
   showLabels = true,
 }: Props) {
   const ratings = extractRatings(reports, fighterName);
-  const cx = size / 2;
-  const cy = size / 2;
-  const maxRadius = size * 0.36; // leaves room for labels
-  const labelRadius = size * 0.46;
+  const viewSize = size + PAD * 2;
+  const cx = viewSize / 2;
+  const cy = viewSize / 2;
+  const maxRadius = size * 0.42;
+  const labelRadius = size * 0.52;
 
-  // Each axis position around the circle. Start at -90deg (top) so the first
-  // axis points up; go clockwise.
+  // Each axis position around the circle. Start at -90deg (top) clockwise.
   const axisAngles = AXES.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI) / AXES.length);
 
   // Polygon points for the actual ratings.
   const ratingPoints = ratings.map((r, i) => {
-    const value = r ?? 0; // missing ratings collapse to center
+    const value = r ?? 0;
     const radius = (value / 10) * maxRadius;
     return {
       x: cx + radius * Math.cos(axisAngles[i]),
@@ -66,23 +70,20 @@ export default function FighterDecagon({
 
   const polygonPath = ratingPoints.map((p) => `${p.x},${p.y}`).join(" ");
 
-  // Gridline polygons (at rating 2, 4, 6, 8, 10)
+  // Gridline polygons at rating 2, 4, 6, 8, 10
   const gridLevels = [2, 4, 6, 8, 10];
   const gridPolygons = gridLevels.map((level) => {
     const radius = (level / 10) * maxRadius;
-    const pts = axisAngles.map((angle) => {
-      const x = cx + radius * Math.cos(angle);
-      const y = cy + radius * Math.sin(angle);
-      return `${x},${y}`;
-    });
-    return pts.join(" ");
+    return axisAngles
+      .map((angle) => `${cx + radius * Math.cos(angle)},${cy + radius * Math.sin(angle)}`)
+      .join(" ");
   });
 
   return (
     <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
+      width={viewSize}
+      height={viewSize}
+      viewBox={`0 0 ${viewSize} ${viewSize}`}
       className="select-none"
     >
       {/* Background gridlines */}
@@ -123,17 +124,11 @@ export default function FighterDecagon({
       {/* Vertices */}
       {ratingPoints.map((p, i) =>
         p.hasData ? (
-          <circle
-            key={i}
-            cx={p.x}
-            cy={p.y}
-            r={2.5}
-            fill={color}
-          />
+          <circle key={i} cx={p.x} cy={p.y} r={2.5} fill={color} />
         ) : null
       )}
 
-      {/* Labels */}
+      {/* Labels — single text per axis with the acronym + rating value */}
       {showLabels &&
         AXES.map((axis, i) => {
           const angle = axisAngles[i];
@@ -148,33 +143,21 @@ export default function FighterDecagon({
           else if (cosA < -0.3) anchor = "end";
 
           return (
-            <g key={i}>
-              <text
-                x={x}
-                y={y}
-                textAnchor={anchor}
-                fontSize={size < 180 ? 8 : 9}
-                fontWeight={700}
-                fill="#888"
-                dominantBaseline="middle"
-                style={{ letterSpacing: "0.05em" }}
-              >
-                {axis.short}
-              </text>
+            <text
+              key={i}
+              x={x}
+              y={y}
+              textAnchor={anchor}
+              fontSize={9}
+              fontWeight={700}
+              dominantBaseline="middle"
+              style={{ letterSpacing: "0.04em" }}
+            >
+              <tspan fill="#999">{axis.short}</tspan>
               {rating !== null && (
-                <text
-                  x={x}
-                  y={y + (size < 180 ? 9 : 11)}
-                  textAnchor={anchor}
-                  fontSize={size < 180 ? 8 : 9}
-                  fontWeight={800}
-                  fill={color}
-                  dominantBaseline="middle"
-                >
-                  {rating}
-                </text>
+                <tspan fill={color} fontWeight={800} dx="4">{rating}</tspan>
               )}
-            </g>
+            </text>
           );
         })}
     </svg>
