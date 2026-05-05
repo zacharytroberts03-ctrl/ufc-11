@@ -60,23 +60,18 @@ function FighterPhoto({
 
 function InfoLine({
   flag,
-  label,
-  value,
+  text,
   align,
 }: {
   flag?: string | null;
-  label: string;
-  value: string;
+  text: string;
   align: "left" | "right";
 }) {
-  const items = [
-    flag ? <span key="flag" className="text-base leading-none">{flag}</span> : null,
-    <span key="label" className="text-[10px] uppercase tracking-widest text-ufc-muted">{label}</span>,
-    <span key="value" className="text-xs text-white truncate">{value}</span>,
-  ];
   return (
     <div className={`flex items-center gap-1.5 max-w-full ${align === "right" ? "justify-end" : "justify-start"}`}>
-      {align === "right" ? items.slice().reverse() : items}
+      {align === "left" && flag && <span className="text-base leading-none">{flag}</span>}
+      <span className="text-xs text-white leading-snug">{text}</span>
+      {align === "right" && flag && <span className="text-base leading-none">{flag}</span>}
     </div>
   );
 }
@@ -101,23 +96,20 @@ function FighterDetails({
       {nationality && (
         <InfoLine
           flag={flagEmojiFromCountry(nationality)}
-          label="From"
-          value={nationality}
+          text={`From ${nationality}`}
           align={align}
         />
       )}
       {fightsOutOf && (
         <InfoLine
           flag={flagEmojiFromLocation(fightsOutOf)}
-          label="Out of"
-          value={fightsOutOf}
+          text={`Fighting Out of ${fightsOutOf}`}
           align={align}
         />
       )}
       {camp && (
         <InfoLine
-          label="Camp"
-          value={camp}
+          text={`Camp: ${camp}`}
           align={align}
         />
       )}
