@@ -70,11 +70,11 @@ export default function FightDetailPage() {
 
       {/* Fighter VS Header with flanking decagon keys (offense left, defense right) */}
       {analysis?.specialist_reports ? (
-        <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr_180px] gap-4 mb-6 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-[140px_1fr_140px] gap-4 mb-6 items-stretch">
           <div className="hidden lg:block">
             <DecagonKey side="offense" />
           </div>
-          <div className="max-w-4xl w-full mx-auto lg:mx-0">
+          <div className="w-full">
             <FighterVsHeader
               f1Name={f1}
               f2Name={f2}

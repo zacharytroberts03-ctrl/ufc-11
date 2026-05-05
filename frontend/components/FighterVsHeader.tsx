@@ -96,7 +96,7 @@ export default function FighterVsHeader({
               reports={specialistReports}
               fighterName={f1Name}
               color={F1_COLOR}
-              size={200}
+              size={175}
             />
           </div>
         </div>
@@ -120,7 +120,7 @@ export default function FighterVsHeader({
               reports={specialistReports}
               fighterName={f2Name}
               color={F2_COLOR}
-              size={200}
+              size={175}
             />
           </div>
           <div className="flex flex-col items-center gap-2 sm:items-end">
