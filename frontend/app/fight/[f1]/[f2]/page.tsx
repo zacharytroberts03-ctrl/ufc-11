@@ -56,7 +56,7 @@ export default function FightDetailPage() {
       {/* Back button */}
       <button
         onClick={() => router.push("/")}
-        className="flex items-center gap-2 text-ufc-muted hover:text-ufc-text text-sm font-semibold mb-6 transition-colors group"
+        className="flex items-center gap-2 text-ufc-muted hover:text-ufc-text text-sm font-semibold mb-6 py-2 -mx-2 px-2 min-h-[44px] transition-colors group"
       >
         <svg
           className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform"

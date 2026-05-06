@@ -82,10 +82,13 @@ export default function FighterDecagon({
 
   return (
     <svg
-      width={viewSize}
-      height={viewSize}
+      // Responsive: fills container up to viewSize so the chart scales down
+      // gracefully on small phones (e.g., iPhone SE) without breaking the layout.
+      width="100%"
+      height="auto"
       viewBox={`0 0 ${viewSize} ${viewSize}`}
       className="select-none"
+      style={{ maxWidth: viewSize, display: "block" }}
     >
       {/* Background gridlines */}
       {gridPolygons.map((points, i) => (

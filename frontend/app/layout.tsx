@@ -41,7 +41,12 @@ export default function RootLayout({
         </main>
 
         <footer className="border-t-2 border-ufc-red mt-16 py-8 text-center text-ufc-muted text-xs">
-          Stats from ufcstats.com · Odds from The Odds API
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-3">
+            <a href="/privacy" className="hover:text-white transition-colors py-1 px-1 min-h-[44px] inline-flex items-center">Privacy</a>
+            <span className="opacity-40">·</span>
+            <a href="/terms" className="hover:text-white transition-colors py-1 px-1 min-h-[44px] inline-flex items-center">Terms</a>
+          </div>
+          <div>Stats from ufcstats.com · Odds from The Odds API</div>
         </footer>
       </body>
     </html>
