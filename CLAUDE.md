@@ -4,12 +4,27 @@ This file is the orientation guide for any Claude session (or human) working on 
 
 ## TL;DR
 
-UFC card analyzer. Scrapes the upcoming card, runs 10 specialist Claude agents per fighter, synthesizes a fight prediction + betting recommendations, publishes the results as static JSON, and deploys to Vercel via CLI. Live at **https://www.ufc-z.com/** (custom domain on Cloudflare DNS, served by the `frontend` Vercel project).
+**Brand: FightZ** (was UFCZ — renamed 2026-05-05 to avoid Zuffa/UFC trademark risk). Scrapes the upcoming UFC card, runs 10 specialist Claude agents per fighter, synthesizes a fight prediction + betting recommendations, publishes the results as static JSON, and deploys to Vercel via CLI. Live at **https://www.ufc-z.com/** (custom domain on Cloudflare DNS, served by the `frontend` Vercel project).
 
-- **Primary domain:** `https://www.ufc-z.com/` (apex `ufc-z.com` 307-redirects to `www`)
+- **App name:** FightZ
+- **Primary domain (current):** `https://www.ufc-z.com/` (apex `ufc-z.com` 307-redirects to `www`)
 - **Legacy URL still live:** `https://frontend-rouge-mu-86.vercel.app/`
 - **GitHub repo:** `https://github.com/zacharytroberts03-ctrl/ufc-11`
 - **Vercel team:** `zacharytroberts03-ctrls-projects`, project `frontend` (the `backend` Vercel project is a legacy FastAPI deploy, not used by current static-JSON pipeline)
+
+## ⚠️ PENDING: Domain swap before App Store submission
+
+The app name is FightZ but the domain still contains "ufc-z" — that's a deliberate transitional state. Before App Store submission, swap to a clean domain (e.g., `fightz.app` or `fightz.io`) so the brand and URL match and there's zero residual UFC-trademark exposure.
+
+**When to trigger:** when the user is about to submit the app to the App Store, or anytime the user explicitly mentions "publishing", "going live", "App Store submission", or similar. Remind them proactively at that point.
+
+**What to do at swap time:**
+1. User registers the new domain in Cloudflare (~5 min, ~$10–15)
+2. User adds it to Vercel `frontend` project + sets it as primary domain
+3. I find-and-replace `ufc-z.com` → new domain across: `CLAUDE.md`, `frontend/app/privacy/page.tsx`, `frontend/app/terms/page.tsx`, any other strings
+4. User sets up 301 redirect from `ufc-z.com` → new domain in Cloudflare Page Rules
+5. User re-points Newly app config to new domain
+6. User updates App Store Connect listing if already submitted
 
 ## Architecture in one paragraph
 

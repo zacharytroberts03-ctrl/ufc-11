@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Terms of Service — UFC Z",
-  description: "Terms of Service for UFC Z fight analyzer",
+  title: "Terms of Service — FightZ",
+  description: "Terms of Service for FightZ fight analyzer",
 };
 
 export default function TermsPage() {
@@ -25,7 +25,7 @@ export default function TermsPage() {
           Important — Read Before Using
         </h2>
         <p className="text-sm sm:text-base text-white/95">
-          UFC Z provides fight analysis and informational commentary for{" "}
+          FightZ provides fight analysis and informational commentary for{" "}
           <strong>entertainment and educational purposes only</strong>. Nothing on
           the Service constitutes professional gambling, financial, or
           investment advice. We do not place bets on your behalf and we are not
@@ -40,7 +40,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-xl font-bold text-white mb-2">1. Acceptance of Terms</h2>
           <p>
-            By accessing or using UFC Z (the &quot;Service&quot;), including the
+            By accessing or using FightZ (the &quot;Service&quot;), including the
             website at{" "}
             <a href="https://www.ufc-z.com" className="text-ufc-red underline">www.ufc-z.com</a>{" "}
             and any associated mobile applications, you agree to be bound by
@@ -125,10 +125,10 @@ export default function TermsPage() {
           <h2 className="text-xl font-bold text-white mb-2">6. Intellectual Property</h2>
           <p>
             The original content, design, and code of the Service are owned by
-            UFC Z and protected by applicable copyright and trademark laws.
+            FightZ and protected by applicable copyright and trademark laws.
             Fighter names, statistics, and event names are property of their
             respective owners and are used for informational purposes only.
-            UFC Z is not affiliated with, endorsed by, or sponsored by Zuffa LLC
+            FightZ is not affiliated with, endorsed by, or sponsored by Zuffa LLC
             or the Ultimate Fighting Championship.
           </p>
         </section>
@@ -162,7 +162,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-xl font-bold text-white mb-2">9. Limitation of Liability</h2>
           <p>
-            TO THE MAXIMUM EXTENT PERMITTED BY LAW, UFC Z AND ITS OPERATORS
+            TO THE MAXIMUM EXTENT PERMITTED BY LAW, FightZ AND ITS OPERATORS
             SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
             CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO
             LOSS OF PROFITS, GAMBLING LOSSES, OR LOSS OF DATA, ARISING OUT OF OR

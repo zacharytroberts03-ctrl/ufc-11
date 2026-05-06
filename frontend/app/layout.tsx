@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "UFC Fight Analyzer",
-  description: "UFC fight analysis and hedge betting calculator",
+  title: "FightZ — UFC Fight Analysis",
+  description: "Specialist-agent fight analysis, fighter ratings, and calculated odds for UFC events.",
 };
 
 export default function RootLayout({
@@ -26,10 +26,10 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
             <a href="/" className="flex items-center gap-2 group">
               <span className="text-white text-xl font-black tracking-tighter">
-                UFC
+                Fight
               </span>
-              <span className="text-white text-sm font-semibold tracking-widest uppercase opacity-80 group-hover:opacity-100 transition-opacity">
-                Fight Analyzer
+              <span className="text-ufc-red text-xl font-black tracking-tighter">
+                Z
               </span>
             </a>
             <div className="flex items-center gap-3" />

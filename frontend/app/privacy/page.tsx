@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Privacy Policy — UFC Z",
-  description: "Privacy Policy for UFC Z fight analyzer",
+  title: "Privacy Policy — FightZ",
+  description: "Privacy Policy for FightZ fight analyzer",
 };
 
 export default function PrivacyPage() {
@@ -23,7 +23,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-xl font-bold text-white mb-2">1. Overview</h2>
           <p>
-            UFC Z (&quot;we,&quot; &quot;our,&quot; or &quot;the Service&quot;) provides UFC fight analysis,
+            FightZ (&quot;we,&quot; &quot;our,&quot; or &quot;the Service&quot;) provides UFC fight analysis,
             statistical breakdowns, and AI-generated betting commentary at{" "}
             <a href="https://www.ufc-z.com" className="text-ufc-red underline">www.ufc-z.com</a>{" "}
             and any associated mobile applications. This Privacy Policy explains what
