@@ -7,6 +7,7 @@ import {
   SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import "./globals.css";
 
 const inter = Inter({
@@ -27,7 +28,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+        variables: {
+          colorPrimary: "#dc0000",
+          colorBackground: "#1a1a1a",
+        },
+      }}
+    >
       <html lang="en" className={inter.variable}>
         <body className="min-h-screen text-ufc-text">
           {/* Nav */}

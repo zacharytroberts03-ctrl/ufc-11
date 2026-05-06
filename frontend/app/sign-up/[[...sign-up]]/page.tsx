@@ -23,14 +23,6 @@ export default function SignUpPage() {
 
       <SignUp
         appearance={{
-          variables: {
-            colorPrimary: "#dc0000",
-            colorBackground: "#1a1a1a",
-            colorText: "#ffffff",
-            colorTextSecondary: "#999999",
-            colorInputBackground: "#0d0d0d",
-            colorInputText: "#ffffff",
-          },
           elements: {
             card: "shadow-2xl border border-ufc-red/40",
           },
