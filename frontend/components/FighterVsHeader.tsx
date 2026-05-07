@@ -34,7 +34,7 @@ function FighterPhoto({
         <img
           src={img}
           alt={name}
-          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover shadow-lg"
+          className="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover shadow-lg"
           style={{ border: `3px solid ${borderColor}` }}
           onError={(e) => {
             const el = e.target as HTMLImageElement;
@@ -44,7 +44,7 @@ function FighterPhoto({
         />
       )}
       <div
-        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center text-3xl sm:text-4xl font-black"
+        className="w-16 h-16 sm:w-24 sm:h-24 rounded-full flex items-center justify-center text-2xl sm:text-4xl font-black"
         style={{
           display: img ? "none" : "flex",
           backgroundColor: "#1a1a1a",
@@ -70,13 +70,7 @@ function FlagImg({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-function FighterDetails({
-  data,
-  align,
-}: {
-  data?: FighterData;
-  align: "left" | "right";
-}) {
+function FighterDetails({ data }: { data?: FighterData }) {
   const i = data?.intangibles;
   if (!i) return null;
 
@@ -101,12 +95,9 @@ function FighterDetails({
   if (!lines.length) return null;
 
   return (
-    <div className={`flex flex-col gap-1 mt-2 w-full ${align === "right" ? "items-end" : "items-start"}`}>
+    <div className="flex flex-col gap-1 mt-2 w-full items-center text-center">
       {lines.map((line, idx) => (
-        <div
-          key={idx}
-          className={`text-xs text-white leading-snug ${align === "right" ? "text-right" : "text-left"}`}
-        >
+        <div key={idx} className="text-[11px] sm:text-xs text-white leading-snug">
           {line.label} {line.value}
           {line.flagSrc && (
             <>
@@ -116,6 +107,50 @@ function FighterDetails({
           )}
         </div>
       ))}
+    </div>
+  );
+}
+
+function FighterColumn({
+  name,
+  photo,
+  debut,
+  data,
+  reports,
+  color,
+  debutTextColor,
+}: {
+  name: string;
+  photo: string | null;
+  debut?: boolean;
+  data?: FighterData;
+  reports?: AnalysisResult["specialist_reports"];
+  color: string;
+  debutTextColor: string;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-2 sm:gap-3 min-w-0">
+      <FighterPhoto name={name} img={photo} borderColor={color} />
+      {debut && (
+        <span
+          className="text-[9px] sm:text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded whitespace-nowrap"
+          style={{ backgroundColor: color, color: debutTextColor }}
+        >
+          UFC DEBUT
+        </span>
+      )}
+      <h2 className="text-sm sm:text-lg md:text-xl font-black text-white text-center leading-tight">
+        {name}
+      </h2>
+      <div className="w-full">
+        <FighterDecagon
+          reports={reports}
+          fighterName={name}
+          color={color}
+          size={175}
+        />
+      </div>
+      <FighterDetails data={data} />
     </div>
   );
 }
@@ -136,79 +171,47 @@ export default function FighterVsHeader({
 
   return (
     <div
-      className="rounded-xl p-5 sm:p-7 mb-6 shadow-2xl"
+      className="rounded-xl p-3 sm:p-6 mb-6 shadow-2xl"
       style={{
         background: "linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%)",
         border: "2px solid #dc0000",
       }}
     >
-      {/* Desktop: two columns with VS in middle. Mobile: stack. */}
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-4 md:items-start">
-        {/* F1 side: photo+name + decagon on top, details row below */}
-        <div className="flex flex-col gap-3 min-w-0">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex flex-col items-center gap-2 sm:items-start min-w-0 max-w-[12rem]">
-              <FighterPhoto name={f1Name} img={f1Photo} borderColor={F1_COLOR} />
-              {f1Debut && (
-                <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded"
-                      style={{ backgroundColor: F1_COLOR, color: "#fff" }}>
-                  UFC DEBUT
-                </span>
-              )}
-              <h2 className="text-lg sm:text-xl font-black text-white text-center sm:text-left leading-tight max-w-[12rem]">
-                {f1Name}
-              </h2>
-            </div>
-            <div className="flex-shrink-0">
-              <FighterDecagon
-                reports={specialistReports}
-                fighterName={f1Name}
-                color={F1_COLOR}
-                size={175}
-              />
-            </div>
-          </div>
-          <FighterDetails data={f1Data} align="left" />
-        </div>
+      {/* 3-column layout: F1 column | VS | F2 column.
+          Each fighter is a vertical stack so the decagons end up at the same
+          row position and sit directly across from each other. */}
+      <div className="grid grid-cols-[1fr_auto_1fr] gap-2 sm:gap-4 items-start">
+        <FighterColumn
+          name={f1Name}
+          photo={f1Photo}
+          debut={f1Debut}
+          data={f1Data}
+          reports={specialistReports}
+          color={F1_COLOR}
+          debutTextColor="#ffffff"
+        />
 
-        {/* VS divider */}
-        <div className="flex items-center justify-center md:flex-col">
-          <div className="hidden md:block h-24 w-px bg-gradient-to-b from-transparent via-[#dc0000] to-transparent" />
+        {/* Vertical VS divider */}
+        <div className="flex flex-col items-center justify-center self-stretch">
+          <div className="flex-1 w-px bg-gradient-to-b from-transparent via-[#dc0000] to-transparent" />
           <span
-            className="text-3xl sm:text-4xl font-black tracking-[0.2em] my-3"
+            className="text-2xl sm:text-4xl md:text-5xl font-black tracking-[0.15em] my-2 sm:my-4"
             style={{ color: F1_COLOR }}
           >
             VS
           </span>
-          <div className="hidden md:block h-24 w-px bg-gradient-to-b from-transparent via-[#d4af37] to-transparent" />
+          <div className="flex-1 w-px bg-gradient-to-b from-transparent via-[#d4af37] to-transparent" />
         </div>
 
-        {/* F2 side: decagon + photo+name on top, details row below (mirrored) */}
-        <div className="flex flex-col gap-3 min-w-0">
-          <div className="flex flex-col-reverse sm:flex-row items-center gap-4 md:justify-end">
-            <div className="flex-shrink-0">
-              <FighterDecagon
-                reports={specialistReports}
-                fighterName={f2Name}
-                color={F2_COLOR}
-                size={175}
-              />
-            </div>
-            <div className="flex flex-col items-center gap-2 sm:items-end min-w-0 max-w-[12rem]">
-              <FighterPhoto name={f2Name} img={f2Photo} borderColor={F2_COLOR} />
-              {f2Debut && (
-                <span className="text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded"
-                      style={{ backgroundColor: F2_COLOR, color: "#1a1a1a" }}>
-                  UFC DEBUT
-                </span>
-              )}
-              <h2 className="text-lg sm:text-xl font-black text-white text-center sm:text-right leading-tight max-w-[12rem]">
-                {f2Name}
-              </h2>
-            </div>
-          </div>
-          <FighterDetails data={f2Data} align="right" />
-        </div>
+        <FighterColumn
+          name={f2Name}
+          photo={f2Photo}
+          debut={f2Debut}
+          data={f2Data}
+          reports={specialistReports}
+          color={F2_COLOR}
+          debutTextColor="#1a1a1a"
+        />
       </div>
     </div>
   );
