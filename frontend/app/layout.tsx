@@ -68,7 +68,6 @@ export default function RootLayout({
                     Account
                   </a>
                   <UserButton
-                    afterSignOutUrl="/"
                     appearance={{
                       elements: {
                         avatarBox: "w-9 h-9",
