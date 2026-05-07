@@ -76,20 +76,21 @@ export default function FightTile({ fight, isMainEvent }: Props) {
         <div className="absolute left-0 top-0 bottom-0 w-1 bg-ufc-red" />
       )}
 
-      <div className={`flex items-center ${isMainEvent ? "px-5 sm:px-7 py-5" : "px-4 sm:px-6 py-3.5"}`}>
+      <div className={`flex items-center ${isMainEvent ? "px-4 sm:px-7 py-4 sm:py-5" : "px-3 sm:px-6 py-3 sm:py-3.5"}`}>
 
-        {/* Fighter 1 — left */}
-        <div className="flex items-center gap-3 flex-1 min-w-0">
+        {/* Fighter 1 — left. Stack photo above name on phone so the name has the full
+            slot width to show in full; horizontal photo+name on tablet+. */}
+        <div className="flex flex-col sm:flex-row items-center sm:gap-3 gap-1.5 flex-1 min-w-0">
           <FighterPhoto img={fight.f1_img} name={fight.fighter1} isMainEvent={isMainEvent} />
-          <div className="min-w-0">
+          <div className="min-w-0 w-full text-center sm:text-left">
             {isMainEvent && (
-              <span className="block text-[9px] font-black tracking-widest uppercase text-ufc-red mb-0.5">
+              <span className="hidden sm:block text-[9px] font-black tracking-widest uppercase text-ufc-red mb-0.5">
                 Main Event
               </span>
             )}
             <span
-              className={`font-black leading-tight block truncate text-black
-                ${isMainEvent ? "text-base" : "text-sm"}
+              className={`font-black leading-tight block text-black break-words
+                ${isMainEvent ? "text-sm sm:text-base" : "text-xs sm:text-sm"}
               `}
             >
               {fight.fighter1}
@@ -98,26 +99,31 @@ export default function FightTile({ fight, isMainEvent }: Props) {
         </div>
 
         {/* Center: VS + weight class */}
-        <div className="flex flex-col items-center gap-1 px-3 sm:px-6 flex-shrink-0">
+        <div className="flex flex-col items-center gap-1 px-2 sm:px-6 flex-shrink-0">
+          {isMainEvent && (
+            <span className="sm:hidden text-[8px] font-black tracking-widest uppercase text-ufc-red whitespace-nowrap">
+              Main Event
+            </span>
+          )}
           <span
-            className={`font-black tracking-widest text-ufc-red ${isMainEvent ? "text-lg" : "text-sm"}`}
+            className={`font-black tracking-widest text-ufc-red ${isMainEvent ? "text-base sm:text-lg" : "text-xs sm:text-sm"}`}
           >
             VS
           </span>
           {fight.weight_class && fight.weight_class !== "N/A" && (
-            <span className="text-[9px] font-bold uppercase tracking-wider text-ufc-muted whitespace-nowrap">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-ufc-muted whitespace-nowrap text-center">
               {fight.weight_class}
             </span>
           )}
         </div>
 
-        {/* Fighter 2 — right (mirrored) */}
-        <div className="flex items-center gap-3 flex-1 min-w-0 flex-row-reverse">
+        {/* Fighter 2 — right (mirrored on tablet+, stacked on phone) */}
+        <div className="flex flex-col sm:flex-row-reverse items-center sm:gap-3 gap-1.5 flex-1 min-w-0">
           <FighterPhoto img={fight.f2_img} name={fight.fighter2} isMainEvent={isMainEvent} />
-          <div className="min-w-0 text-right">
+          <div className="min-w-0 w-full text-center sm:text-right">
             <span
-              className={`font-black leading-tight block truncate text-black
-                ${isMainEvent ? "text-base" : "text-sm"}
+              className={`font-black leading-tight block text-black break-words
+                ${isMainEvent ? "text-sm sm:text-base" : "text-xs sm:text-sm"}
               `}
             >
               {fight.fighter2}
@@ -125,9 +131,9 @@ export default function FightTile({ fight, isMainEvent }: Props) {
           </div>
         </div>
 
-        {/* Chevron */}
+        {/* Chevron — hide on smallest phones to save space */}
         <svg
-          className="w-4 h-4 text-ufc-border group-hover:text-ufc-red transition-colors ml-3 flex-shrink-0 group-hover:translate-x-0.5 transition-transform"
+          className="w-4 h-4 text-ufc-border group-hover:text-ufc-red transition-colors ml-2 sm:ml-3 flex-shrink-0 group-hover:translate-x-0.5 transition-transform hidden xs:block"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

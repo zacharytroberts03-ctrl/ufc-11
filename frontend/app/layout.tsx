@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import {
-  ClerkProvider,
-  Show,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider, Show, UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import "./globals.css";
 
@@ -53,16 +47,18 @@ export default function RootLayout({
 
               <div className="flex items-center gap-2">
                 <Show when="signed-out">
-                  <SignInButton mode="modal">
-                    <button className="text-white text-sm font-semibold px-3 py-2 rounded hover:bg-white/10 transition-colors min-h-[44px]">
-                      Sign In
-                    </button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <button className="bg-ufc-red text-white text-sm font-bold px-4 py-2 rounded hover:bg-ufc-red-dark transition-colors min-h-[44px]">
-                      Sign Up
-                    </button>
-                  </SignUpButton>
+                  <a
+                    href="/sign-in"
+                    className="text-white text-sm font-semibold px-3 py-2 rounded hover:bg-white/10 transition-colors min-h-[44px] inline-flex items-center"
+                  >
+                    Sign In
+                  </a>
+                  <a
+                    href="/sign-up"
+                    className="bg-ufc-red text-white text-sm font-bold px-4 py-2 rounded hover:bg-ufc-red-dark transition-colors min-h-[44px] inline-flex items-center"
+                  >
+                    Sign Up
+                  </a>
                 </Show>
                 <Show when="signed-in">
                   <a
@@ -72,6 +68,7 @@ export default function RootLayout({
                     Account
                   </a>
                   <UserButton
+                    afterSignOutUrl="/"
                     appearance={{
                       elements: {
                         avatarBox: "w-9 h-9",
