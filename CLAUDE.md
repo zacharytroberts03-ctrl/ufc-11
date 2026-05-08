@@ -141,6 +141,12 @@ Two prior commits flipped this priority for opposing reasons:
 
 The current temporal logic + 2-day window handles both. If you flip again, expect to recreate one of the two bugs.
 
+## App Store launch project (active workstream)
+
+A separate doc tracks the App Store submission plan: `docs/app-store-listing.md` has the App Name, subtitle, keywords, full description draft, App Privacy answers, and submission checklist. Pull that up at submission time.
+
+Current state (2026-05-07): Phase 1 web prep done, Clerk auth + paywall + account pages live, RevenueCat account created. Apple Developer Program enrolled but not yet approved. Wrapper service (Newly/Median/Capacitor) deliberately deferred until close to deploy — when that conversation opens, **verify any service URL independently before recommending it**. Detailed status lives in the private memory at `~/.claude/.../project_ufc_11.md`.
+
 ## Frontend conventions
 
 - **Theme is dark** despite some Tailwind color names suggesting otherwise. The `ufc-surface` token is `#ffffff` (legacy, light-themed) but actual cards use `bg-[#0d0d0d]` / dark gradients. Don't add new white surfaces.
@@ -150,6 +156,9 @@ The current temporal logic + 2-day window handles both. If you flip again, expec
 - **Fight detail page sections start collapsed** (Style & Profile, Head-to-Head, Endings, The Favorite Fighter). Don't change `defaultOpen` to `true` without checking with the user.
 - **The Favorite Fighter tab** (NOT "Betting Recommendation") shows: pick + win %, calculated American moneyline odds, confidence, key thesis, and a disclaimer that we do NOT pull odds from any sportsbook — these are computed from our analysis alone.
 - **Decagon labels:** unique acronyms `O-STR / D-STR / O-WRS / D-WRS / ...`. Both keys flank the VS header (offense red on left, defense gold on right) and stretch full height to match.
+- **FighterVsHeader layout:** 3-column grid `[F1 stack | VS | F2 stack]` on every screen size. Each fighter is a vertical stack: photo → name → decagon → details (From/Fighting Out of/Team). The decagons sit at the same row position so they're directly side-by-side. Don't put photos on the outer flanks of the card — that was the old layout pre-2026-05-07.
+- **FightTile (homepage list):** photo+name stack vertically on phone (`flex-col`), side-by-side on `sm:` and up. Names use `break-words`, NOT `truncate`, so full names are always visible — App Store screenshots looked terrible with the truncated "K..." / "Jos..." version.
+- **Auth in header:** plain `<a>` links to `/sign-in` and `/sign-up` (NOT Clerk's `mode="modal"` buttons). Modal mode had unfixable dark-theme issues; the dedicated pages render cleanly via @clerk/themes' `dark` baseTheme on ClerkProvider.
 
 ## Manual data overrides
 
