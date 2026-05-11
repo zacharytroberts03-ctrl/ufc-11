@@ -105,22 +105,15 @@ def find_current_event(debug: bool = False) -> tuple[str, str, str, str]:
     past = [ev for ev in all_events if ev["date"] and ev["date"] < today]
     future = [ev for ev in all_events if ev["date"] and ev["date"] > today]
 
-    # Priority 2: post-fight reflection window. For ~2 days after fight night
-    # keep showing the just-finished event so Sun/Mon viewers see the card they
-    # just watched, not next week's preview. Past commit 6e2896e flipped the
-    # whole priority order to fix premature jump-ahead, but that left the site
-    # stuck on stale past events Tue-Fri before the next fight.
-    if past:
-        most_recent = max(past, key=lambda e: e["date"])
-        if (today - most_recent["date"]).days <= 2:
-            return most_recent["name"], most_recent["date_str"], most_recent["location"], most_recent["url"]
-
-    # Priority 3: next upcoming event (preview window — Tue through Fri before Sat fight)
+    # Priority 2: next upcoming event. As soon as fight night is over, switch
+    # to previewing next week's card — the site is forward-looking by design.
+    # (Removed the prior 2-day post-fight reflection window on 2026-05-11 per
+    # user direction: "it should be showing the next week's fights".)
     if future:
         closest = min(future, key=lambda e: e["date"])
         return closest["name"], closest["date_str"], closest["location"], closest["url"]
 
-    # Priority 4: most recent past as last resort (no upcoming events listed)
+    # Priority 3: most recent past as last resort (no upcoming events listed yet)
     if past:
         most_recent = max(past, key=lambda e: e["date"])
         return most_recent["name"], most_recent["date_str"], most_recent["location"], most_recent["url"]

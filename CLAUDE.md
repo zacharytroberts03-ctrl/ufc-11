@@ -128,18 +128,18 @@ To re-register / change the schedule, edit `setup_schedule.ps1` and run it again
 
 ## Event-priority logic (in `scrape_ufc_card.py::find_current_event`)
 
-Temporal priority — DO NOT FLIP THIS without understanding both failure modes:
+Forward-looking priority — DO NOT FLIP THIS without understanding the failure modes:
 
-1. Event happening today
-2. Most recent past event **within 2 days** (post-fight reflection window for Sun/Mon viewers)
-3. Next upcoming event (Tue–Fri preview window)
-4. Most recent past event as last resort (no upcoming events listed)
+1. Event happening today (catches fight day even if ufcstats moves the event to "completed" before midnight)
+2. Next upcoming event (the common case — site previews next week's card)
+3. Most recent past event as last resort (only when ufcstats hasn't listed any upcoming event yet)
 
-Two prior commits flipped this priority for opposing reasons:
-- Original future-first → premature jump-ahead on fight Saturdays (UTC/local timezone skew)
-- Past-first (`6e2896e`) → 6-day-stale site Tue-Fri before next fight night
+History of this logic:
+- Original future-first → premature jump-ahead on fight Saturdays (UTC/local timezone skew) — fixed by adding "today" as priority 1.
+- Past-first (`6e2896e`) → 6-day-stale site Tue-Fri before next fight night — fixed by reverting.
+- 2-day post-fight reflection window added 2026-05-01 → caused Monday refreshes to keep showing the previous Saturday's already-over fight instead of next week's preview. Removed 2026-05-11 per user direction.
 
-The current temporal logic + 2-day window handles both. If you flip again, expect to recreate one of the two bugs.
+Don't re-add a past-event window without an explicit user request — the user prefers forward-looking content. The "today" priority handles the fight-Saturday case without needing a reflection window.
 
 ## App Store launch project (active workstream)
 
