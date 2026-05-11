@@ -23,7 +23,8 @@ import traceback
 BACKEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 PROJECT_DIR = os.path.abspath(os.path.join(BACKEND_DIR, os.pardir))  # ufc-11/
 WORKSPACE_ROOT = os.path.abspath(os.path.join(PROJECT_DIR, os.pardir))  # Claude/
-FRONTEND_DATA_DIR = os.path.join(PROJECT_DIR, "frontend", "public", "data")
+FRONTEND_DIR = os.path.join(PROJECT_DIR, "frontend")
+FRONTEND_DATA_DIR = os.path.join(FRONTEND_DIR, "public", "data")
 
 sys.path.insert(0, BACKEND_DIR)
 sys.path.insert(0, os.path.join(BACKEND_DIR, "tools"))
@@ -116,7 +117,32 @@ def _commit_and_push() -> None:
     if push.returncode != 0:
         print(f"git push failed: {push.stderr}", file=sys.stderr)
         return
-    print("Pushed to origin — Vercel will redeploy")
+    print("Pushed to origin")
+
+
+def _vercel_deploy() -> None:
+    """Push the frontend to Vercel production. The frontend Vercel project is
+    not wired to GitHub auto-deploy, so we deploy from the CLI here. Best-effort:
+    log failures but don't crash the refresh.
+
+    Why: missing this step left the deployed site 6 days stale on 2026-05-01 even
+    though git pushes were succeeding."""
+    npx = shutil.which("npx") or shutil.which("npx.cmd")
+    if not npx:
+        print("vercel deploy skipped: npx not on PATH", file=sys.stderr)
+        return
+    proc = subprocess.run(
+        [npx, "--yes", "vercel", "--prod", "--yes", "--cwd", FRONTEND_DIR],
+        cwd=FRONTEND_DIR,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=600,
+    )
+    if proc.returncode != 0:
+        print(f"vercel deploy failed (exit {proc.returncode}): {proc.stderr.strip()}", file=sys.stderr)
+        return
+    print("Deployed to Vercel production")
 
 
 def main() -> int:
@@ -128,6 +154,24 @@ def main() -> int:
     if not fights:
         print("No fights parsed — aborting before clobbering cache", file=sys.stderr)
         return 3
+
+    # Stale-event guard: scraper has historically picked a past event when
+    # ufcstats listings shift. With temporal logic the worst legitimate case is
+    # a fight 2 days ago (post-fight reflection window). Anything older means
+    # the priority logic fell into the last-resort branch — refuse to publish.
+    try:
+        event_date = datetime.datetime.strptime(card["date"], "%B %d, %Y").date()
+    except ValueError:
+        print(f"Could not parse event date {card['date']!r} — aborting", file=sys.stderr)
+        return 4
+    days_old = (datetime.date.today() - event_date).days
+    if days_old > 7:
+        print(
+            f"Selected event {card['event_name']} is {days_old} days old "
+            f"({card['date']}) — refusing to publish stale data",
+            file=sys.stderr,
+        )
+        return 5
 
     event_key = f"{_slug(card['event_name'])}__{card['date']}"
     print(f"Event: {card['event_name']} ({card['date']}) — {len(fights)} fights")
@@ -159,6 +203,7 @@ def main() -> int:
                     "scheduled_rounds": 5 if is_main_event else 3,
                     "is_main_event": is_main_event,
                     "is_title_fight": False,
+                    "section": section,  # "main" or "prelim" — drives Opus/Sonnet model pick
                 },
             )
             cache["fights"][key] = result
@@ -177,6 +222,7 @@ def main() -> int:
     card_payload = _split_card(card)
     _publish_to_frontend(cache, card_payload)
     _commit_and_push()
+    _vercel_deploy()
 
     elapsed = time.monotonic() - started
     print(

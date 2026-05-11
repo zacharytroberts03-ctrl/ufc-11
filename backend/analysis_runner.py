@@ -205,7 +205,7 @@ def run_analysis(
 
     # Fan out 20 specialist agent calls (parallel, cached)
     cache = _get_agent_cache()
-    client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
+    client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""), timeout=300.0)
     specialist_reports = run_all_agents_for_fight(
         f1_dossier, f2_dossier, model=model, client=client, cache=cache
     )
