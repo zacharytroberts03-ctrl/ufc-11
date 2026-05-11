@@ -46,6 +46,18 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      # Restore the per-(fighter,agent,opponent,last_fight_date) cache between
+      # runs so repeat refreshes of the same upcoming card hit cache instead of
+      # re-paying ~$30-50/run in Anthropic calls. First run is a cache miss and
+      # populates this; subsequent runs of the same event are then nearly free.
+      - name: Restore agent cache
+        uses: actions/cache@v4
+        with:
+          path: backend/cache/agent_reports.json
+          key: agent-reports-${{ github.run_id }}
+          restore-keys: |
+            agent-reports-
+
       - name: Configure git author
         run: |
           git config user.name  "github-actions[bot]"
