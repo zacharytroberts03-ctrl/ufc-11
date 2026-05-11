@@ -49,9 +49,11 @@ def _slug(s: str) -> str:
     return "".join(c.lower() if c.isalnum() else "-" for c in s).strip("-")
 
 
-def _split_card(card: dict) -> dict:
-    """Mirror the /api/card endpoint: split fights into main_card / prelims and
-    populate per-fighter image URLs."""
+def _split_card(card: dict, cache: dict | None = None) -> dict:
+    """Mirror the /api/card endpoint: split fights into main_card / prelims,
+    populate per-fighter image URLs, and (when cache is provided) propagate
+    `ufc_debut` flags from the per-fight analysis cache so the homepage can
+    surface debut-fight tiles."""
     out = {
         "event_name": card["event_name"],
         "date": card["date"],
@@ -60,10 +62,19 @@ def _split_card(card: dict) -> dict:
         "main_card": [],
         "prelims": [],
     }
+    cached_fights = (cache or {}).get("fights", {})
     for fight in card.get("fights", []):
         enriched = dict(fight)
         enriched["f1_img"] = get_fighter_photo_url(fight["fighter1"])
         enriched["f2_img"] = get_fighter_photo_url(fight["fighter2"])
+        key = fight_key(fight["fighter1"], fight["fighter2"])
+        analysis = cached_fights.get(key) or {}
+        f1d = (analysis.get("f1_data") or {}).get("ufc_debut")
+        f2d = (analysis.get("f2_data") or {}).get("ufc_debut")
+        if f1d:
+            enriched["f1_debut"] = True
+        if f2d:
+            enriched["f2_debut"] = True
         bucket = "main_card" if fight.get("section") == "main" else "prelims"
         out[bucket].append(enriched)
     return out
@@ -235,7 +246,7 @@ def main() -> int:
         print("All fights failed — not publishing", file=sys.stderr)
         return 1
 
-    card_payload = _split_card(card)
+    card_payload = _split_card(card, cache=cache)
     _publish_to_frontend(cache, card_payload)
     _commit_and_push()
     _vercel_deploy()

@@ -4,6 +4,8 @@ export interface Fight {
   weight_class?: string;
   f1_img?: string | null;
   f2_img?: string | null;
+  f1_debut?: boolean;
+  f2_debut?: boolean;
 }
 
 export interface CardData {

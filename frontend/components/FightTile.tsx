@@ -59,16 +59,22 @@ export default function FightTile({ fight, isMainEvent }: Props) {
     router.push(`/fight/${f1}/${f2}`);
   };
 
+  // Soft navy when either fighter is making their UFC debut — flags fights
+  // where one side is an unknown quantity at the UFC level.
+  const hasDebut = fight.f1_debut || fight.f2_debut;
+  const tileBg = hasDebut
+    ? "bg-[#1e3a5f] hover:bg-[#264a7a]"
+    : "bg-white hover:bg-ufc-elevated";
+  const nameColor = hasDebut ? "text-white" : "text-black";
+  const weightColor = hasDebut ? "text-white/70" : "text-ufc-muted";
+
   return (
     <button
       onClick={handleClick}
       className={`
         group w-full text-left relative overflow-hidden
         border-b transition-all duration-200 cursor-pointer
-        ${isMainEvent
-          ? "border-b-ufc-red/40 bg-white hover:bg-ufc-elevated"
-          : "border-b-ufc-border bg-white hover:bg-ufc-elevated"
-        }
+        ${isMainEvent ? "border-b-ufc-red/40" : "border-b-ufc-border"} ${tileBg}
       `}
     >
       {/* Main event: red left accent bar */}
@@ -89,7 +95,7 @@ export default function FightTile({ fight, isMainEvent }: Props) {
               </span>
             )}
             <span
-              className={`font-black leading-tight block text-black break-words
+              className={`font-black leading-tight block ${nameColor} break-words
                 ${isMainEvent ? "text-sm sm:text-base" : "text-xs sm:text-sm"}
               `}
             >
@@ -111,7 +117,7 @@ export default function FightTile({ fight, isMainEvent }: Props) {
             VS
           </span>
           {fight.weight_class && fight.weight_class !== "N/A" && (
-            <span className="text-[9px] font-bold uppercase tracking-wider text-ufc-muted whitespace-nowrap text-center">
+            <span className={`text-[9px] font-bold uppercase tracking-wider whitespace-nowrap text-center ${weightColor}`}>
               {fight.weight_class}
             </span>
           )}
@@ -122,7 +128,7 @@ export default function FightTile({ fight, isMainEvent }: Props) {
           <FighterPhoto img={fight.f2_img} name={fight.fighter2} isMainEvent={isMainEvent} />
           <div className="min-w-0 w-full text-center sm:text-right">
             <span
-              className={`font-black leading-tight block text-black break-words
+              className={`font-black leading-tight block ${nameColor} break-words
                 ${isMainEvent ? "text-sm sm:text-base" : "text-xs sm:text-sm"}
               `}
             >

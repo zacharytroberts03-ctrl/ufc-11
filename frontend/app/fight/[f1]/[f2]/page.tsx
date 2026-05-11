@@ -8,6 +8,7 @@ import FighterVsHeader from "@/components/FighterVsHeader";
 import DecagonKey from "@/components/DecagonKey";
 import AnalysisSection from "@/components/AnalysisSection";
 import FavoriteFighterPanel from "@/components/FavoriteFighterPanel";
+import FightHistorySection from "@/components/FightHistorySection";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function FightDetailPage() {
@@ -150,6 +151,21 @@ export default function FightDetailPage() {
                 )}
               </div>
             )}
+            <AnalysisSection
+              title="Fight History — last 5"
+              icon="📜"
+              defaultOpen={false}
+              accentColor="gold"
+            >
+              <FightHistorySection
+                f1Name={f1}
+                f2Name={f2}
+                f1Data={analysis.f1_data}
+                f2Data={analysis.f2_data}
+                f1Debut={Boolean(analysis.f1_data?.ufc_debut)}
+                f2Debut={Boolean(analysis.f2_data?.ufc_debut)}
+              />
+            </AnalysisSection>
             {sections.head2head && (
               <AnalysisSection
                 title="Head-to-Head Breakdown"
