@@ -61,6 +61,12 @@ ufc-11/
 │   │   ├── scrape_bestfightodds.py ← line-movement scraper
 │   │   ├── altitude_lookup.py      ← venue altitude
 │   │   └── hedge_calculator.py     ← arbitrage / hedge math
+│   ├── reflection/                 ← post-event reflection package (Tasks 1-4 done 2026-05-11)
+│   │   ├── __init__.py             ← package marker
+│   │   ├── outcome_scraper.py      ← scrapes ufcstats completed-event results → {winner,method,round,time,stats}
+│   │   ├── score.py                ← deterministic per-fight scoring (Brier, pick accuracy, line-beat ROI)
+│   │   ├── lesson_store.py         ← read/write lessons.json + regenerate lessons.md
+│   │   └── tests/                  ← pytest unit tests for score + lesson_store
 │   ├── rules/BETTING_AI_RULES.md   ← curated betting heuristics injected into synthesizer system prompt
 │   ├── scripts/
 │   │   ├── refresh_cache.py        ← THE main daily entry point (called by scheduled task)
