@@ -145,6 +145,29 @@ Refresh runs in GitHub's cloud, NOT on the user's PC. Moved off Windows schedule
 
 The Windows scheduled task `CardDealsUpdater` was disabled on 2026-05-11. `setup_schedule.ps1` and `run_card_deals.bat` are kept in the repo for ad-hoc local runs but no longer fire on a schedule.
 
+## Reflection pipeline (`.github/workflows/reflect.yml`)
+
+Runs every **Sunday 12:00 UTC** (~7 AM CDT). Idempotent: if no event we predicted on completed in the past 7 days, exits in <30s.
+
+Pipeline (in `backend/reflection/__main__.py`):
+
+1. **Detect** which event(s) we have predictions for that just completed (cross-references `analyses.json` event_key against ufcstats completed-events list).
+2. **Scrape** actual outcomes from ufcstats and closing lines from BestFightOdds.
+3. **Score** deterministically (no LLM): pick correct?, method correct?, round correct?, Brier score, line-beat ROI. Output: `backend/cache/scores/<event_key>.json`.
+4. **Three Opus reflection passes:**
+   - Per-fight reflection (13 parallel Opus calls) → structured findings
+   - Card meta-pass (1 Opus call) → cross-fight patterns
+   - Lesson merge (1 Opus call) → updated `backend/cache/lessons.json`
+5. **Commit + push** lessons.json, lessons.md, the event score file, and a new row in `metrics_log.jsonl`.
+
+**How lessons take effect:** `agent_runner.py` and `synthesizer.py` load `lessons.json` on every call and append high-confidence lessons (filtered by `applies_to`) to the system prompt. No manual step needed — the next refresh-card.yml run automatically uses the new lessons.
+
+**Cost:** ~$2.85/event (all Opus). ~$145/year at 1 event/week.
+
+**Manual run:** `gh workflow run reflect.yml --repo zacharytroberts03-ctrl/ufc-11` or `python -m backend.reflection [--dry-run] [--event-key KEY]` from the local backend.
+
+See [docs/superpowers/specs/2026-05-11-post-event-reflection-design.md](docs/superpowers/specs/2026-05-11-post-event-reflection-design.md) for the full design.
+
 ## Event-priority logic (in `scrape_ufc_card.py::find_current_event`)
 
 Forward-looking priority — DO NOT FLIP THIS without understanding the failure modes:
@@ -223,6 +246,7 @@ Cost levers if needed: drop main card to Sonnet (~70% reduction), skip the Wed r
 
 - Don't pass `temperature` to Opus 4.7+ models (deprecated, returns 400).
 - Don't construct `anthropic.Anthropic(...)` without a `timeout=` value — one hung HTTP call inside `ThreadPoolExecutor.as_completed` blocks the whole refresh. All three callers (`agent_runner`, `synthesizer`, `analysis_runner`) currently pass `timeout=300.0`.
+- Don't manually edit `backend/cache/lessons.json` — the lesson-merge pass owns it and will overwrite your edits on the next reflection run. If you want to remove a bad lesson, drop the corresponding `lessons[]` entry in a one-off commit AND add a guardrail to the lesson-merge prompt to keep it out.
 - Don't assume `git push` triggers a Vercel deploy (it doesn't — see Deployment section).
 - Don't re-enable the Windows `CardDealsUpdater` scheduled task — the cron now lives in GitHub Actions, and running both would double-refresh and conflict on git push.
 - Don't use Cloudflare's orange-cloud proxy on the Vercel DNS records (breaks SSL).
