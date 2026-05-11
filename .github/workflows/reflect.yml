@@ -70,3 +70,30 @@ jobs:
             ARGS="$ARGS --event-key \"${{ github.event.inputs.event_key }}\""
           fi
           eval "python -m backend.reflection $ARGS"
+
+      - name: Email status notification
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          from: FightZ Bot <${{ secrets.GMAIL_USER }}>
+          to: ${{ secrets.NOTIFY_EMAIL_TO }}
+          subject: "[FightZ reflect] ${{ job.status }} — run #${{ github.run_number }}"
+          body: |
+            FightZ reflection workflow finished.
+
+            Status:       ${{ job.status }}
+            Workflow:     ${{ github.workflow }}
+            Triggered by: ${{ github.event_name }}
+            Run number:   #${{ github.run_number }}
+            Commit:       ${{ github.sha }}
+
+            Lessons:      ${{ github.server_url }}/${{ github.repository }}/blob/master/backend/cache/lessons.md
+            Run log:      ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            If status is "failure" or "cancelled", open the run log above to see which step broke.
+            If status is "success" but you don't see updated lessons, the workflow likely found no completed events to reflect on (idempotent skip).

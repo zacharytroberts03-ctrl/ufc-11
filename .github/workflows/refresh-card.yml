@@ -84,3 +84,29 @@ jobs:
       - name: Refresh card and deploy
         working-directory: backend
         run: python scripts/refresh_cache.py
+
+      - name: Email status notification
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          from: FightZ Bot <${{ secrets.GMAIL_USER }}>
+          to: ${{ secrets.NOTIFY_EMAIL_TO }}
+          subject: "[FightZ refresh] ${{ job.status }} — run #${{ github.run_number }}"
+          body: |
+            FightZ refresh-card workflow finished.
+
+            Status:       ${{ job.status }}
+            Workflow:     ${{ github.workflow }}
+            Triggered by: ${{ github.event_name }}
+            Run number:   #${{ github.run_number }}
+            Commit:       ${{ github.sha }}
+
+            Site:         https://www.ufc-z.com/
+            Run log:      ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            If status is "failure" or "cancelled", open the run log above to see which step broke.
