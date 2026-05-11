@@ -18,6 +18,39 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import anthropic
 import yaml
 
+from pathlib import Path
+from backend.reflection.lesson_store import load_lessons, lessons_for_agent
+
+_LESSONS_PATH = Path(__file__).resolve().parent.parent / "cache" / "lessons.json"
+
+_LESSONS_INJECTION_HEADER = """
+
+## Field-tested adjustments from past predictions
+
+The following patterns have been observed in past predictions. Use them as PRIORS that adjust your default reasoning, NOT as overriding rules. If the current dossier directly contradicts a prior, trust the dossier.
+"""
+
+
+def _inject_lessons(system_prompt: str, agent_name: str, max_lessons: int = 5) -> str:
+    """Append a 'Field-tested adjustments' section to the system prompt if
+    there are relevant high-confidence lessons. Falls back to the original
+    prompt unchanged if lessons.json is missing or has no matching entries."""
+    try:
+        store = load_lessons(_LESSONS_PATH)
+    except Exception:
+        return system_prompt
+    relevant = lessons_for_agent(store, agent_name, max_lessons=max_lessons)
+    if not relevant:
+        return system_prompt
+    parts = [system_prompt, _LESSONS_INJECTION_HEADER]
+    for lesson in relevant:
+        parts.append(
+            f"\n- PATTERN: {lesson.get('pattern', '?')}\n"
+            f"  CORRECTION: {lesson.get('suggested_correction', '?')}\n"
+            f"  EVIDENCE: {lesson.get('evidence_count', 0)} observations since {lesson.get('first_seen', '?')}"
+        )
+    return "".join(parts)
+
 BACKEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 PROJECT_DIR = os.path.abspath(os.path.join(BACKEND_DIR, os.pardir))
 AGENTS_DIR = os.path.join(PROJECT_DIR, "UFC agents")
@@ -167,6 +200,7 @@ def run_one_agent(
 ) -> dict:
     """Invoke a single agent and return {report, narrative, raw, issues, agent_name}."""
     frontmatter, system_prompt, agent_name = load_agent(agent_path)
+    system_prompt = _inject_lessons(system_prompt, agent_name)
     user_text = _build_user_payload(primary, opponent, dossier, opponent_dossier)
 
     kwargs = {
