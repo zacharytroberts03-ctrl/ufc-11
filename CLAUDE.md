@@ -35,6 +35,8 @@ Backend Python scripts (running on the user's local Windows machine, not on Verc
 ```
 ufc-11/
 ├── CLAUDE.md                       ← you are here
+├── .github/workflows/
+│   └── refresh-card.yml            ← cron in GitHub Actions (Mon/Wed/Fri) — replaces local Windows task
 ├── UFC agents/                     ← framework: 10 specialist agent files (5 offense + 5 defense)
 │   ├── README.md                   ← framework documentation, read this for agent behavior
 │   ├── _shared/{output-schema, data-contract, archetype-taxonomy}.md
@@ -113,18 +115,29 @@ Per fight, the pipeline does this:
 
 ## Deployment
 
-**Vercel project is NOT linked to GitHub auto-deploy.** Every previous deploy in `vercel ls` was a manual CLI invocation. Don't assume a `git push` triggers a deploy — it does not. Discovery date: 2026-05-01, when the site sat 6 days stale despite daily git pushes. The fix lives in `refresh_cache.py::_vercel_deploy()` which runs `npx vercel --prod --yes --cwd frontend` after the git push.
+**Vercel project is NOT linked to GitHub auto-deploy.** Every deploy in `vercel ls` is a manual CLI invocation. Don't assume a `git push` triggers a deploy — it does not. The fix lives in `refresh_cache.py::_vercel_deploy()` which runs `npx vercel --prod --yes --cwd frontend` after the git push. The CI workflow installs vercel globally and supplies `VERCEL_TOKEN` / `VERCEL_ORG_ID` / `VERCEL_PROJECT_ID` env vars, so the same `npx vercel` call works there too.
 
 If anyone (you, future me, the user) wires up the GitHub integration in the Vercel dashboard later, **delete `_vercel_deploy()` from refresh_cache.py** to avoid double-deploys, and update this file.
 
-## Schedule (Windows scheduled task `CardDealsUpdater`)
+## Schedule (GitHub Actions cron — `.github/workflows/refresh-card.yml`)
 
-- **Triggers:** Mon 9:00 AM, Wed 2:00 PM, Fri 8:00 PM (weekly)
-- **Settings:** `StartWhenAvailable=True`, `WakeToRun=True`, runs on battery, 2h execution-time limit
-- **Caveat:** `WakeToRun` only works from sleep, not from full shutdown. Full shutdown still misses the trigger; `StartWhenAvailable` catches up on next boot.
-- **Stale-event guard:** `refresh_cache.py` aborts (exit code 5) if the scraped event date is more than 7 days old. This catches edge cases where the priority logic falls into the last-resort branch and prevents silently deploying week-old fights.
+Refresh runs in GitHub's cloud, NOT on the user's PC. Moved off Windows scheduled task on **2026-05-11** because the laptop hibernated through a Friday trigger and a Sunday catch-up hung mid-run, leaving the site stale for 5 days.
 
-To re-register / change the schedule, edit `setup_schedule.ps1` and run it again as Administrator.
+- **Triggers (UTC):** Mon 14:00, Wed 19:00, Sat 01:00 — these are the same local times as before (Mon 9 AM CDT, Wed 2 PM CDT, Fri 8 PM CDT). DST will shift them by 1h in winter; acceptable.
+- **Manual trigger:** `gh workflow run refresh-card.yml --repo zacharytroberts03-ctrl/ufc-11` or via the Actions tab.
+- **Job timeout:** 90 minutes (a healthy run takes ~30-50 min when caches are warm and most fighters are fresh).
+- **Agent cache:** `actions/cache@v4` persists `backend/cache/agent_reports.json` across runs keyed `agent-reports-<run_id>` with restore-key prefix `agent-reports-`. Repeat refreshes of the same upcoming card hit cache and finish in single-digit minutes.
+- **Stale-event guard:** `refresh_cache.py` aborts (exit code 5) if the scraped event date is more than 7 days old — catches the case where the priority logic falls into the last-resort branch.
+- **Per-request timeout:** every `anthropic.Anthropic(...)` client is constructed with `timeout=300.0`. Without this, one hung HTTP call blocked the whole `ThreadPoolExecutor` and the 2026-05-10 catch-up never reached the publish step.
+
+**Required GitHub secrets** (set via `gh secret set` against `zacharytroberts03-ctrl/ufc-11`):
+- `ANTHROPIC_API_KEY` — same key the local script uses
+- `ODDS_API_KEY` — same key (currently 401ing; rotate when convenient)
+- `VERCEL_TOKEN` — generated at https://vercel.com/account/tokens
+- `VERCEL_ORG_ID` — `team_96Vx5cGig0SWAXw4FCFnr9qi` (from `frontend/.vercel/project.json`)
+- `VERCEL_PROJECT_ID` — `prj_ApiBxfW1ussO2G9l4e1eOLETjIja` (same source)
+
+The Windows scheduled task `CardDealsUpdater` was disabled on 2026-05-11. `setup_schedule.ps1` and `run_card_deals.bat` are kept in the repo for ad-hoc local runs but no longer fire on a schedule.
 
 ## Event-priority logic (in `scrape_ufc_card.py::find_current_event`)
 
@@ -203,13 +216,15 @@ Cost levers if needed: drop main card to Sonnet (~70% reduction), skip the Wed r
 ## Don't-do-this list (consolidated from past bugs)
 
 - Don't pass `temperature` to Opus 4.7+ models (deprecated, returns 400).
+- Don't construct `anthropic.Anthropic(...)` without a `timeout=` value — one hung HTTP call inside `ThreadPoolExecutor.as_completed` blocks the whole refresh. All three callers (`agent_runner`, `synthesizer`, `analysis_runner`) currently pass `timeout=300.0`.
 - Don't assume `git push` triggers a Vercel deploy (it doesn't — see Deployment section).
+- Don't re-enable the Windows `CardDealsUpdater` scheduled task — the cron now lives in GitHub Actions, and running both would double-refresh and conflict on git push.
 - Don't use Cloudflare's orange-cloud proxy on the Vercel DNS records (breaks SSL).
 - Don't hardcode `https://frontend-rouge-mu-86.vercel.app` or any Vercel domain in code or data files. Use relative paths.
 - Don't rename the Tapology output keys (`camp`, `nationality`, `fights_out_of`) — the dossier adapter and frontend types depend on them.
 - Don't flip the event-priority order in `find_current_event` without re-reading the section above.
 - Don't add the "AI" word back to UI strings (user explicitly removed it).
-- Don't store API keys outside `c:/Users/Owner/Desktop/Claude/.env` (workspace-level — backend reads with `dotenv` from there).
+- Don't store API keys outside `c:/Users/Owner/Desktop/Claude/.env` (workspace-level — backend reads with `dotenv` from there). GHA reads them from repo secrets.
 
 ## Update protocol — keep this file alive
 
