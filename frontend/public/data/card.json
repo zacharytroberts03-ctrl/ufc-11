@@ -5,12 +5,12 @@
   "event_url": "http://www.ufcstats.com/event-details/9eedac48b497de5a",
   "main_card": [
     {
-      "fighter1": "Khamzat Chimaev",
-      "fighter2": "Sean Strickland",
+      "fighter1": "Sean Strickland",
+      "fighter2": "Khamzat Chimaev",
       "weight_class": "Middleweight",
       "section": "main",
-      "f1_img": "/fighter_photos/Khamzat_Chimaev.jpg",
-      "f2_img": "/fighter_photos/Sean_Strickland.jpg"
+      "f1_img": "/fighter_photos/Sean_Strickland.jpg",
+      "f2_img": "/fighter_photos/Khamzat_Chimaev.jpg"
     },
     {
       "fighter1": "Joshua Van",
@@ -55,12 +55,12 @@
       "f2_img": "/fighter_photos/Ozzy_Diaz.jpg"
     },
     {
-      "fighter1": "Joel Alvarez",
-      "fighter2": "Yaroslav Amosov",
+      "fighter1": "Yaroslav Amosov",
+      "fighter2": "Joel Alvarez",
       "weight_class": "Welterweight",
       "section": "prelim",
-      "f1_img": "/fighter_photos/Joel_Alvarez.jpg",
-      "f2_img": "/fighter_photos/Yaroslav_Amosov.jpg"
+      "f1_img": "/fighter_photos/Yaroslav_Amosov.jpg",
+      "f2_img": "/fighter_photos/Joel_Alvarez.jpg"
     },
     {
       "fighter1": "Grant Dawson",
@@ -103,12 +103,12 @@
       "f2_img": "/fighter_photos/Djorden_Santos.jpg"
     },
     {
-      "fighter1": "Clayton Carpenter",
-      "fighter2": "Jose Ochoa",
+      "fighter1": "Jose Ochoa",
+      "fighter2": "Clayton Carpenter",
       "weight_class": "Flyweight",
       "section": "prelim",
-      "f1_img": "/fighter_photos/Clayton_Carpenter.jpg",
-      "f2_img": "/fighter_photos/Jose_Ochoa.jpg"
+      "f1_img": "/fighter_photos/Jose_Ochoa.jpg",
+      "f2_img": "/fighter_photos/Clayton_Carpenter.jpg"
     }
   ]
 }
