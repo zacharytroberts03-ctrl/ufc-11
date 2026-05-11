@@ -115,8 +115,24 @@ def _commit_and_push() -> None:
 
     push = _git("push")
     if push.returncode != 0:
-        print(f"git push failed: {push.stderr}", file=sys.stderr)
-        return
+        # Most common cause: remote moved during the long agent-pipeline run
+        # (someone else pushed, or two workflows raced). Rebase onto the new
+        # tip and try once more. The freshly-built analyses.json is what we
+        # want as the final state regardless of intervening commits.
+        print(f"git push rejected, attempting rebase: {push.stderr.strip()}", file=sys.stderr)
+        fetch = _git("fetch", "origin")
+        if fetch.returncode != 0:
+            print(f"git fetch failed: {fetch.stderr}", file=sys.stderr)
+            return
+        rebase = _git("rebase", "origin/master")
+        if rebase.returncode != 0:
+            print(f"git rebase failed (manual fix needed): {rebase.stderr}", file=sys.stderr)
+            _git("rebase", "--abort")
+            return
+        push = _git("push")
+        if push.returncode != 0:
+            print(f"git push failed after rebase: {push.stderr}", file=sys.stderr)
+            return
     print("Pushed to origin")
 
 
