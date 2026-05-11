@@ -13,10 +13,36 @@ from __future__ import annotations
 import json
 import os
 import re
+from pathlib import Path
 
 import anthropic
 
+from backend.reflection.lesson_store import load_lessons, lessons_for_agent
+
 BACKEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+
+_LESSONS_PATH = Path(__file__).resolve().parent.parent / "cache" / "lessons.json"
+
+
+def _inject_synthesizer_lessons(instructions: str, max_lessons: int = 8) -> str:
+    """Append synthesizer-relevant lessons (applies_to contains 'synthesizer')."""
+    try:
+        store = load_lessons(_LESSONS_PATH)
+    except Exception:
+        return instructions
+    relevant = lessons_for_agent(store, "synthesizer", max_lessons=max_lessons)
+    if not relevant:
+        return instructions
+    parts = [instructions,
+             "\n\n## Field-tested adjustments from past synthesizer predictions\n",
+             "Use these as priors that adjust default reasoning, NOT as overriding rules. If the current matchup contradicts a prior, trust the matchup.\n"]
+    for lesson in relevant:
+        parts.append(
+            f"\n- PATTERN: {lesson.get('pattern', '?')}\n"
+            f"  CORRECTION: {lesson.get('suggested_correction', '?')}\n"
+            f"  EVIDENCE: {lesson.get('evidence_count', 0)} observations since {lesson.get('first_seen', '?')}"
+        )
+    return "".join(parts)
 
 
 # Each pair: (offense_agent, defense_agent) within a single domain.
@@ -277,6 +303,7 @@ def synthesize(
     instructions = _OUTPUT_INSTRUCTIONS.format(
         f1_name=f1_dossier["name"], f2_name=f2_dossier["name"]
     )
+    instructions = _inject_synthesizer_lessons(instructions)
     user_text = (
         f"DATA (JSON):\n{user_payload}\n\n---\n\nINSTRUCTIONS:\n{instructions}"
     )
