@@ -83,8 +83,11 @@ export default function FightDetailPage() {
         Fight Card
       </button>
 
-      {/* Fighter VS Header with flanking decagon keys (offense left, defense right) */}
-      {analysis?.specialist_reports ? (
+      {/* Fighter VS Header with flanking decagon keys (offense left, defense right).
+          The decagons ARE analytical content (10-axis specialist ratings), so they
+          must be gated behind the same access check as the text sections — locked
+          users only see the bare identity view (photos + names + bio). */}
+      {analysis?.specialist_reports && accessReason !== "locked" ? (
         <div className="grid grid-cols-1 lg:grid-cols-[170px_1fr_170px] gap-4 mb-6 items-stretch">
           <div className="hidden lg:flex h-full">
             <DecagonKey side="offense" />
