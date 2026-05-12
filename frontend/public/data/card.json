@@ -26,7 +26,8 @@
       "weight_class": "Bantamweight",
       "section": "main",
       "f1_img": "/fighter_photos/Malcolm_Wellmaker.jpg",
-      "f2_img": "/fighter_photos/Juan_Diaz.jpg"
+      "f2_img": "/fighter_photos/Juan_Diaz.jpg",
+      "free_tier": true
     },
     {
       "fighter1": "Modestas Bukauskas",
@@ -84,7 +85,8 @@
       "weight_class": "Middleweight",
       "section": "prelim",
       "f1_img": "/fighter_photos/Cody_Brundage.jpg",
-      "f2_img": "/fighter_photos/Andre_Petroski.jpg"
+      "f2_img": "/fighter_photos/Andre_Petroski.jpg",
+      "free_tier": true
     },
     {
       "fighter1": "Alice Ardelean",
@@ -92,7 +94,8 @@
       "weight_class": "Women's Strawweight",
       "section": "prelim",
       "f1_img": "/fighter_photos/Alice_Ardelean.jpg",
-      "f2_img": "/fighter_photos/Polyana_Viana.jpg"
+      "f2_img": "/fighter_photos/Polyana_Viana.jpg",
+      "free_tier": true
     },
     {
       "fighter1": "Daniel Barez",

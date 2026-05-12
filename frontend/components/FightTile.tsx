@@ -59,14 +59,23 @@ export default function FightTile({ fight, isMainEvent }: Props) {
     router.push(`/fight/${f1}/${f2}`);
   };
 
-  // Soft navy when either fighter is making their UFC debut — flags fights
-  // where one side is an unknown quantity at the UFC level.
+  // Tile background varies by status. Priority: free > debut > default.
+  //   free_tier  → soft mint green: this fight is viewable without a subscription
+  //   debut      → soft navy:        one of the fighters is a UFC debut
+  //   default    → white
+  const isFree = fight.free_tier === true;
   const hasDebut = fight.f1_debut || fight.f2_debut;
-  const tileBg = hasDebut
+  const tileBg = isFree
+    ? "bg-[#c8e6c9] hover:bg-[#b6dcb8]"
+    : hasDebut
     ? "bg-[#1e3a5f] hover:bg-[#264a7a]"
     : "bg-white hover:bg-ufc-elevated";
-  const nameColor = hasDebut ? "text-white" : "text-black";
-  const weightColor = hasDebut ? "text-white/70" : "text-ufc-muted";
+  const nameColor = isFree ? "text-black" : hasDebut ? "text-white" : "text-black";
+  const weightColor = isFree
+    ? "text-green-900/70"
+    : hasDebut
+    ? "text-white/70"
+    : "text-ufc-muted";
 
   return (
     <button
@@ -119,6 +128,11 @@ export default function FightTile({ fight, isMainEvent }: Props) {
           {fight.weight_class && fight.weight_class !== "N/A" && (
             <span className={`text-[9px] font-bold uppercase tracking-wider whitespace-nowrap text-center ${weightColor}`}>
               {fight.weight_class}
+            </span>
+          )}
+          {isFree && (
+            <span className="mt-0.5 text-[8px] sm:text-[9px] font-black tracking-widest uppercase text-white bg-green-700 px-1.5 py-0.5 rounded">
+              Free
             </span>
           )}
         </div>

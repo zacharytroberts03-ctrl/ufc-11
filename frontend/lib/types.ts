@@ -6,6 +6,9 @@ export interface Fight {
   f2_img?: string | null;
   f1_debut?: boolean;
   f2_debut?: boolean;
+  /** Free-tier fight — visible to signed-in users without a subscription. Auto-picked
+   * at refresh time as the highest-win_prob fights (2 prelims + 1 non-main-event main card). */
+  free_tier?: boolean;
 }
 
 export interface CardData {

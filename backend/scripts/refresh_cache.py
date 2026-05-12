@@ -49,11 +49,45 @@ def _slug(s: str) -> str:
     return "".join(c.lower() if c.isalnum() else "-" for c in s).strip("-")
 
 
+def _win_prob(analysis: dict) -> float:
+    """Highest-confidence pick's win probability for ranking free-tier candidates.
+    Returns 0.0 if not parseable."""
+    bets = analysis.get("bets") or {}
+    ml = bets.get("moneyline") or {}
+    p = ml.get("win_prob")
+    try:
+        return float(p)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _pick_free_tier_keys(card: dict, cache: dict) -> set[str]:
+    """Pick 3 free-tier fights: 2 prelims + 1 main-card (excluding the main event
+    itself), sorted by our model's win_prob desc — these are the fights we have
+    the most conviction on, so they're the best "free taste" of the analysis."""
+    cached_fights = (cache or {}).get("fights", {})
+    fights = card.get("fights", [])
+    if not fights:
+        return set()
+    by_key = {fight_key(f["fighter1"], f["fighter2"]): f for f in fights}
+
+    def score(k: str) -> float:
+        return _win_prob(cached_fights.get(k) or {})
+
+    prelim_keys = [fight_key(f["fighter1"], f["fighter2"]) for f in fights if f.get("section") != "main"]
+    main_keys = [fight_key(f["fighter1"], f["fighter2"]) for f in fights if f.get("section") == "main"]
+    # Main event is index 0 of the main_card. Exclude it.
+    main_non_headliner = main_keys[1:] if len(main_keys) >= 1 else []
+
+    top_prelims = sorted(prelim_keys, key=score, reverse=True)[:2]
+    top_main = sorted(main_non_headliner, key=score, reverse=True)[:1]
+    return set(top_prelims + top_main)
+
+
 def _split_card(card: dict, cache: dict | None = None) -> dict:
     """Mirror the /api/card endpoint: split fights into main_card / prelims,
     populate per-fighter image URLs, and (when cache is provided) propagate
-    `ufc_debut` flags from the per-fight analysis cache so the homepage can
-    surface debut-fight tiles."""
+    `ufc_debut` flags + stamp `free_tier` on the 3 highest-confidence fights."""
     out = {
         "event_name": card["event_name"],
         "date": card["date"],
@@ -63,6 +97,7 @@ def _split_card(card: dict, cache: dict | None = None) -> dict:
         "prelims": [],
     }
     cached_fights = (cache or {}).get("fights", {})
+    free_keys = _pick_free_tier_keys(card, cache) if cache else set()
     for fight in card.get("fights", []):
         enriched = dict(fight)
         enriched["f1_img"] = get_fighter_photo_url(fight["fighter1"])
@@ -75,6 +110,8 @@ def _split_card(card: dict, cache: dict | None = None) -> dict:
             enriched["f1_debut"] = True
         if f2d:
             enriched["f2_debut"] = True
+        if key in free_keys:
+            enriched["free_tier"] = True
         bucket = "main_card" if fight.get("section") == "main" else "prelims"
         out[bucket].append(enriched)
     return out
