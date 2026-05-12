@@ -9,7 +9,10 @@ import DecagonKey from "@/components/DecagonKey";
 import AnalysisSection from "@/components/AnalysisSection";
 import FavoriteFighterPanel from "@/components/FavoriteFighterPanel";
 import FightHistorySection from "@/components/FightHistorySection";
+import FightLockedCard from "@/components/FightLockedCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
+type AccessReason = "admin" | "free_tier" | "subscriber" | "locked" | "anonymous";
 
 export default function FightDetailPage() {
   const params = useParams<{ f1: string; f2: string }>();
@@ -24,6 +27,7 @@ export default function FightDetailPage() {
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [f1ImgFallback, setF1ImgFallback] = useState<string | null>(null);
   const [f2ImgFallback, setF2ImgFallback] = useState<string | null>(null);
+  const [accessReason, setAccessReason] = useState<AccessReason | null>(null);
 
   useEffect(() => {
     fetchCachedAnalysis(f1, f2)
@@ -33,6 +37,15 @@ export default function FightDetailPage() {
     // Fetch photos independently so they show even without an analysis
     fetchFighter(f1).then((d) => { if (d?.photo_url) setF1ImgFallback(d.photo_url); });
     fetchFighter(f2).then((d) => { if (d?.photo_url) setF2ImgFallback(d.photo_url); });
+
+    // Resolve access for this signed-in user against this specific fight.
+    // The middleware already enforces sign-in for /fight/..., so anonymous is
+    // only possible if Clerk auth temporarily fails — treat as locked.
+    const url = `/api/access?f1=${encodeURIComponent(f1)}&f2=${encodeURIComponent(f2)}`;
+    fetch(url, { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => setAccessReason((data?.reason as AccessReason | undefined) ?? "locked"))
+      .catch(() => setAccessReason("locked"));
   }, [f1, f2]);
 
   const handleRunAnalysis = async () => {
@@ -124,8 +137,17 @@ export default function FightDetailPage() {
           )}
         </div>
 
-        {loadingAnalysis ? (
+        {loadingAnalysis || accessReason === null ? (
           <LoadingSpinner message="Checking for cached analysis..." />
+        ) : accessReason === "locked" ? (
+          /* Signed-in non-subscriber on a paid fight — inline paywall card.
+             Admins, subscribers, and free_tier fights fall through to the
+             real content below. */
+          <FightLockedCard
+            fighter1={f1}
+            fighter2={f2}
+            weightClass={analysis?.f1_data?.weight ?? undefined}
+          />
         ) : analysis ? (
           <div className="space-y-1">
             {/* Side-by-side fighter profiles */}
