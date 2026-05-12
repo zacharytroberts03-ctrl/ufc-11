@@ -65,22 +65,22 @@ export default function PaywallPage() {
         {plan === "annual" ? (
           <div className="text-center">
             <div className="inline-block bg-ufc-red text-white text-[10px] font-black tracking-widest uppercase px-3 py-1 rounded-full mb-3">
-              Save 30%
+              Save 22%
             </div>
             <div className="text-5xl sm:text-6xl font-black text-white mb-1">
-              $99.99
+              $74.99
               <span className="text-lg sm:text-xl text-ufc-muted font-bold ml-1">
                 /year
               </span>
             </div>
             <div className="text-sm text-ufc-muted mb-6">
-              Billed annually after your 7-day free trial. Works out to ~$8.33/mo.
+              Billed annually after your 7-day free trial. Works out to ~$6.25/mo.
             </div>
           </div>
         ) : (
           <div className="text-center">
             <div className="text-5xl sm:text-6xl font-black text-white mb-1">
-              $11.99
+              $7.99
               <span className="text-lg sm:text-xl text-ufc-muted font-bold ml-1">
                 /month
               </span>
@@ -100,7 +100,7 @@ export default function PaywallPage() {
 
         <p className="text-[11px] text-ufc-muted text-center mt-3 leading-relaxed">
           Free for 7 days, then{" "}
-          {plan === "annual" ? "$99.99 billed annually" : "$11.99 billed monthly"}.
+          {plan === "annual" ? "$74.99 billed annually" : "$7.99 billed monthly"}.
           Cancel anytime in your Apple ID settings before the trial ends to avoid
           charges. Subscription auto-renews unless cancelled at least 24 hours
           before the end of the current period.

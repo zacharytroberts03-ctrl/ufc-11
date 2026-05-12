@@ -47,7 +47,7 @@ What you get with FightZ:
 
 Try it free for 7 days.
 
-Start your free 7-day trial — no charge until day 8. After the trial, FightZ is $11.99/month or $99.99/year (saves you 30%). Cancel anytime in your Apple ID settings.
+Start your free 7-day trial — no charge until day 8. After the trial, FightZ is $7.99/month or $74.99/year (saves you 22%). Cancel anytime in your Apple ID settings.
 
 Important:
 
