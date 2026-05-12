@@ -48,7 +48,7 @@ app.add_middleware(
 # ── Helper: fighter image lookup ──────────────────────────────────────────────
 
 # Relative paths so photos load correctly on whichever domain serves the site
-# (ufc-z.com today, the legacy frontend-rouge-mu-86.vercel.app, or any future
+# (fightz.app today, the legacy frontend-rouge-mu-86.vercel.app, or any future
 # domain). The Next.js public/ directory serves these at the same path.
 def get_fighter_photo_url(name: str) -> str | None:
     slug = name.replace(" ", "_")

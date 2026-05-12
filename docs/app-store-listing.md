@@ -69,12 +69,12 @@ Based on current data flow:
 
 ## Submission notes — what to verify before tapping Submit
 
-- [ ] Privacy Policy URL: `https://www.ufc-z.com/privacy` (or new domain after swap)
-- [ ] Terms of Service URL: `https://www.ufc-z.com/terms` (or new domain after swap)
-- [ ] Support URL: `https://www.ufc-z.com/` (or `mailto:zacharytroberts03@gmail.com`)
-- [ ] Demo account credentials for review team (create a test Clerk account: `apple-review@ufc-z.com` with password) — Apple reviewers will use this to access gated content
+- [ ] Privacy Policy URL: `https://fightz.app/privacy`
+- [ ] Terms of Service URL: `https://fightz.app/terms`
+- [ ] Support URL: `https://fightz.app/` (or `mailto:zacharytroberts03@gmail.com`)
+- [ ] Demo account credentials for review team (create a test Clerk account: `apple-review@fightz.app` with password) — Apple reviewers will use this to access gated content
 - [ ] All 5–10 screenshots staged (6.7" iPhone)
 - [ ] App icon at `frontend/public/icon-1024.png`
-- [ ] Domain swap from `ufc-z.com` to clean domain done (per CLAUDE.md "PENDING: Domain swap")
+- [x] Domain swap from `ufc-z.com` to clean domain done — `fightz.app` registered + live 2026-05-11
 - [ ] RevenueCat fully wired and IAP products created in App Store Connect
 - [ ] Test purchase flow in TestFlight before submission

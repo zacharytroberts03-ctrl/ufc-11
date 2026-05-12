@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           <p>
             FightZ (&quot;we,&quot; &quot;our,&quot; or &quot;the Service&quot;) provides UFC fight analysis,
             statistical breakdowns, and AI-generated betting commentary at{" "}
-            <a href="https://www.ufc-z.com" className="text-ufc-red underline">www.ufc-z.com</a>{" "}
+            <a href="https://fightz.app" className="text-ufc-red underline">fightz.app</a>{" "}
             and any associated mobile applications. This Privacy Policy explains what
             information we collect, how we use it, and your choices.
           </p>

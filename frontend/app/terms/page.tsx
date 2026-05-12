@@ -42,7 +42,7 @@ export default function TermsPage() {
           <p>
             By accessing or using FightZ (the &quot;Service&quot;), including the
             website at{" "}
-            <a href="https://www.ufc-z.com" className="text-ufc-red underline">www.ufc-z.com</a>{" "}
+            <a href="https://fightz.app" className="text-ufc-red underline">fightz.app</a>{" "}
             and any associated mobile applications, you agree to be bound by
             these Terms of Service (&quot;Terms&quot;). If you do not agree, do
             not use the Service.

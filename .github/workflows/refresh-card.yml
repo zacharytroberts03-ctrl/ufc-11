@@ -106,7 +106,7 @@ jobs:
             Run number:   #${{ github.run_number }}
             Commit:       ${{ github.sha }}
 
-            Site:         https://www.ufc-z.com/
+            Site:         https://fightz.app/
             Run log:      ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             If status is "failure" or "cancelled", open the run log above to see which step broke.
