@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider, Show, UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import RevenueCatBoot from "@/components/RevenueCatBoot";
 import "./globals.css";
 
 const inter = Inter({
@@ -33,6 +34,7 @@ export default function RootLayout({
     >
       <html lang="en" className={inter.variable}>
         <body className="min-h-screen text-ufc-text">
+          <RevenueCatBoot />
           {/* Nav */}
           <header className="sticky top-0 z-50 border-b-2 border-ufc-red bg-[#111111]/95 backdrop-blur-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">

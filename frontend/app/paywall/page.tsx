@@ -1,18 +1,55 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { isNativeIOS, purchasePackageById, restorePurchases } from "@/lib/native";
 
 export default function PaywallPage() {
+  const router = useRouter();
   const [plan, setPlan] = useState<"annual" | "monthly">("annual");
+  const [purchasing, setPurchasing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // RevenueCat purchase flow gets wired in Phase 4 once Apple Developer
-  // approves and the StoreKit products are configured. Until then, this
-  // button is informational and doesn't actually charge.
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
+    setError(null);
+    // Native iOS: trigger Apple's StoreKit purchase flow via RevenueCat.
+    if (isNativeIOS()) {
+      setPurchasing(true);
+      const packageId = plan === "annual" ? "$rc_annual" : "$rc_monthly";
+      const result = await purchasePackageById(packageId);
+      setPurchasing(false);
+      if (result.success && result.hasPro) {
+        // Purchase complete — back to where they came from.
+        router.push("/");
+        return;
+      }
+      if (result.error && result.error !== "cancelled") {
+        setError(result.error);
+      }
+      return;
+    }
+
+    // Web browser: Apple requires IAP for digital subscriptions, so we can't
+    // sell on the web. Direct users to the iOS app.
     alert(
-      "In-app subscriptions are not connected yet. This will trigger Apple's purchase sheet once the App Store products are configured."
+      "In-app subscriptions are only available in the FightZ iOS app (coming soon to the App Store)."
     );
+  };
+
+  const handleRestore = async () => {
+    if (!isNativeIOS()) return;
+    setError(null);
+    setPurchasing(true);
+    const result = await restorePurchases();
+    setPurchasing(false);
+    if (result.success && result.hasPro) {
+      router.push("/");
+    } else if (result.error) {
+      setError(result.error);
+    } else {
+      setError("No prior purchases found.");
+    }
   };
 
   return (
@@ -93,10 +130,17 @@ export default function PaywallPage() {
 
         <button
           onClick={handleSubscribe}
-          className="w-full bg-ufc-red hover:bg-ufc-red-dark text-white font-black text-base sm:text-lg py-4 rounded-xl transition-colors min-h-[56px]"
+          disabled={purchasing}
+          className="w-full bg-ufc-red hover:bg-ufc-red-dark disabled:opacity-60 disabled:cursor-not-allowed text-white font-black text-base sm:text-lg py-4 rounded-xl transition-colors min-h-[56px]"
         >
-          Start 7-Day Free Trial
+          {purchasing ? "Processing..." : "Start 7-Day Free Trial"}
         </button>
+
+        {error && (
+          <div className="mt-3 px-3 py-2 rounded bg-ufc-red/15 border border-ufc-red/40 text-ufc-red text-xs text-center">
+            {error}
+          </div>
+        )}
 
         <p className="text-[11px] text-ufc-muted text-center mt-3 leading-relaxed">
           Free for 7 days, then{" "}
@@ -105,6 +149,18 @@ export default function PaywallPage() {
           charges. Subscription auto-renews unless cancelled at least 24 hours
           before the end of the current period.
         </p>
+
+        {/* Apple requires apps with IAP to offer a "Restore Purchases" path.
+            Shown only inside the iOS app — useless in the web browser. */}
+        {isNativeIOS() && (
+          <button
+            onClick={handleRestore}
+            disabled={purchasing}
+            className="block w-full text-center text-xs text-ufc-muted hover:text-white underline-offset-4 hover:underline mt-3 py-2 min-h-[44px] transition-colors"
+          >
+            Restore previous purchases
+          </button>
+        )}
       </div>
 
       {/* Feature list */}
