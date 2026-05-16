@@ -19,7 +19,7 @@ import anthropic
 import yaml
 
 from pathlib import Path
-from backend.reflection.lesson_store import load_lessons, lessons_for_agent
+from reflection.lesson_store import load_lessons, lessons_for_agent
 
 _LESSONS_PATH = Path(__file__).resolve().parent.parent / "cache" / "lessons.json"
 

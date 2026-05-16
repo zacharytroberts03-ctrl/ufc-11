@@ -17,7 +17,7 @@ from pathlib import Path
 
 import anthropic
 
-from backend.reflection.lesson_store import load_lessons, lessons_for_agent
+from reflection.lesson_store import load_lessons, lessons_for_agent
 
 BACKEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
