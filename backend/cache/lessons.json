@@ -1,7 +1,236 @@
 {
   "schema_version": 1,
-  "last_updated": null,
+  "last_updated": "2026-05-17T12:55:25.853829+00:00",
   "lessons": [],
-  "watchlist": [],
+  "watchlist": [
+    {
+      "id": "watch_001",
+      "pattern": "Submission probability is systematically under-floored when one fighter has dominant top-control or active sub-hunting tools and the opponent has zero offensive grappling, no sweep history, or an untested 'black box' bottom game. Career sub_finish_rate priors collapse method probability to 2-6% when positional dominance plus a passenger bottom game is itself a base-rate submission generator.",
+      "responsible_agents": [
+        "synthesizer",
+        "ufc-submission-defense",
+        "ufc-grappling-defense",
+        "ufc-submission-offense"
+      ],
+      "suggested_correction": "Floor submission probability at 8-12% whenever (a) one fighter has demonstrated top-control or 1.0+ sub_avg and (b) the opponent has zero offensive grappling, no sweep history, or an untested bottom game — regardless of either fighter's career sub_finish_rate.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "card-level",
+          "what_we_said": "Sub probability collapsed to 2-6% across Diaz-Wellmaker, Sopaj-Cuamba, Ardelean-Viana, Caliari-Bannon based on career sub_finish_rate priors.",
+          "what_happened": "All four fights ended via submission or featured submission as the decisive axis, validating that positional dominance + passenger bottom game generates subs regardless of career finish rate."
+        }
+      ]
+    },
+    {
+      "id": "watch_002",
+      "pattern": "Mishandled translation between raw takedown stats (td_avg, td_acc, TDD%) and expected fight-altering outcomes. Sometimes inflates a paper wrestling edge into a 'decisive domain' when expected successful TDs are <1/fight; other times dismisses real wrestling threats by anchoring on low td_acc or 'won't shoot' priors. TDD% treated as hard number rather than noisy, opponent-dependent estimate.",
+      "responsible_agents": [
+        "ufc-takedown-offense",
+        "ufc-takedown-defense",
+        "ufc-wrestling-offense",
+        "ufc-wrestling-defense",
+        "synthesizer"
+      ],
+      "suggested_correction": "Always compute expected successful TDs as (td_avg × (1 - opponent TDD)) and require ≥1.5/fight before calling wrestling a 'decisive domain'; conversely, treat any sub-60% TDD as a live exploit even if the opponent's recent profile shows no wrestling commitment. Treat TDD% as noisy when attempts-faced sample is unknown.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "card-level",
+          "what_we_said": "Allen 'won't shoot' (0.86 td_avg); Diaz 33% acc means 'most shots sprawlable'; Barez 1.93×28% framed as 'structural backbone'; Erslan-Tokkos grappling pipeline projected as decisive.",
+          "what_happened": "Allen landed 7 TDs and won via wrestling; Diaz landed 5 TDs and submitted Wellmaker; Barez landed only 1 TD and lost on the feet; Tokkos failed to grapple and lost striking decision."
+        }
+      ]
+    },
+    {
+      "id": "watch_003",
+      "pattern": "Synthesizer misuses closing line movement — either citing stale/incorrect movement to confirm its own pick, or fading large market consensus moves without identifying a specific reason the market is wrong. Strong adverse line movement is rationalized rather than treated as a Bayesian signal.",
+      "responsible_agents": [
+        "synthesizer"
+      ],
+      "suggested_correction": "When the closing line diverges from the model probability by >10 percentage points against the pick, automatically shrink the model estimate halfway toward the de-vigged market or refuse the bet. Never use observed line movement as confirmation of an existing read without independent evidence.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "card-level",
+          "what_we_said": "Erslan-Tokkos: cited line moving to Tokkos when it had moved to Erslan -182; Petroski-Brundage: cited sharp money confirming wrestling thesis; Barez-Gurule and Caliari-Bannon: faded 10-25pp market consensus moves.",
+          "what_happened": "All four picks were on wrong side of closing line by 10+ points; Brundage, Gurule, Caliari all won as market expected."
+        }
+      ]
+    },
+    {
+      "id": "watch_004",
+      "pattern": "Recent form/momentum and raw striking stats applied asymmetrically without opposition-quality adjustment. Win streaks against weaker opposition taken at face value; losing streaks against elite opposition treated as declining-trajectory penalties — leading to systematic picking of the 'hotter' fighter who had a softer recent slate.",
+      "responsible_agents": [
+        "synthesizer",
+        "ufc-striking-offense",
+        "ufc-striking-defense"
+      ],
+      "suggested_correction": "Normalize win/loss tallies by opposition tier before applying form adjustments. A 2-3 stretch against top-10 opponents should weight equal to or above a 5-0 against unranked competition. Discount striking volume/accuracy stats by 10-15% when the recent sample is against sub-top-15 opponents.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "card-level",
+          "what_we_said": "Costa's 5-fight streak vs Ige/Charriere/Fili treated as near-coin-flip vs Allen; Vieira's losses to Pennington/Harrison/Dumont treated as decline vs Cavalcanti's 5-0 streak; Tokkos's one win over Tafa treated as momentum.",
+          "what_happened": "Allen, Vieira, and Erslan (the 'declining' veterans facing softer-slate opponents) all won their fights."
+        }
+      ]
+    },
+    {
+      "id": "watch_005",
+      "pattern": "When specialist agents explicitly flag a categorical stylistic mismatch ('this is the exact test he's built to fail,' chin vs sniper, untested bottom game vs top-control wrestler), the synthesizer downweights these structural flags in favor of demographic/intangible factors (age, activity, momentum, cardio path) or multi-path narratives.",
+      "responsible_agents": [
+        "synthesizer",
+        "ufc-striking-defense",
+        "ufc-striking-offense"
+      ],
+      "suggested_correction": "Treat any specialist 'categorical mismatch' flag (chin vs power, untested bottom vs top-control, retreating defense vs sniper) as a primary prior that rotates the headline pick — not a footnoted x-factor. A recent fast KO loss to a similar archetype should immediately raise the opponent's finish probability above 25%.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "card-level",
+          "what_we_said": "Santos-Choi: synth picked Santos 60% despite striking-def agent flagging 'exact test built to fail'; Petroski-Brundage: chin flagged but TDD headline used; Ardelean-Viana: clean sub record over-weighted vs active sub hunter.",
+          "what_happened": "Choi KO'd Santos R2; Brundage KO'd Petroski R2; Viana submitted Ardelean R2 — all three categorical mismatches were the decisive factor."
+        }
+      ]
+    },
+    {
+      "id": "watch_006",
+      "pattern": "Raw SLpM differential over-weighted as predictive of round-winning without accounting for clinch/cage-pressure neutralization by a forward-pressure opponent with adequate strike defense.",
+      "responsible_agents": [
+        "ufc-striking-offense",
+        "ufc-striking-defense",
+        "synthesizer"
+      ],
+      "suggested_correction": "Discount the favorite's SLpM volume edge by 30-40% when the underdog is a forward-pressure clinch fighter with str_def ≥50% and no KO losses.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "jacqueline-cavalcanti__ketlen-vieira",
+          "what_we_said": "Cavalcanti's 5.65 vs 2.76 SLpM edge and 2-inch reach projected to dominate striking exchanges.",
+          "what_happened": "Cavalcanti landed 53 to Vieira's 30 — real but not lopsided — and Vieira won the decision via clinch/pressure work."
+        }
+      ]
+    },
+    {
+      "id": "watch_007",
+      "pattern": "Synthesizer leans on a single 'blueprint' fight comparison without verifying stylistic match or that the cited fight was decisive rather than a split decision.",
+      "responsible_agents": [
+        "synthesizer"
+      ],
+      "suggested_correction": "Require at least two prior blueprint examples before extrapolating a stylistic template; do not cite split-decision fights as definitive blueprints.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "jacqueline-cavalcanti__ketlen-vieira",
+          "what_we_said": "Cited Dumont's win over Vieira as the blueprint Cavalcanti would replicate as 'a better version of that same fighter.'",
+          "what_happened": "Vieira won the fight, demonstrating the blueprint wasn't repeatable from a single prior example."
+        }
+      ]
+    },
+    {
+      "id": "watch_008",
+      "pattern": "Sub_finish_rate computed from <10 attempts treated as a decisive predictor of finishing reliability, when small-sample conversion percentages are statistically meaningless and sub_avg + demonstrated recent finishes are the better signal.",
+      "responsible_agents": [
+        "ufc-grappling-offense",
+        "ufc-submission-offense",
+        "synthesizer"
+      ],
+      "suggested_correction": "When a fighter's sub_finish_rate is based on fewer than 10 attempts, treat sub_avg and demonstrated finish capability as the primary signal and downweight the conversion percentage as noise.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "nicolle-caliari__shauna-bannon",
+          "what_we_said": "Caliari's 12.5% sub_finish_rate (1 of ~8) framed her as an 'unreliable finisher' in a 'war of attrition.'",
+          "what_happened": "Caliari won by submission in R3 at 3:08, contradicting the unreliable-finisher framing."
+        }
+      ]
+    },
+    {
+      "id": "watch_009",
+      "pattern": "Multiplicative penalization of specialist skills (sub_avg, KO power, etc.) when a fighter is on a losing streak — treating 'declining confidence' as fact rather than narrative, without concrete evidence the specific skill is failing.",
+      "responsible_agents": [
+        "ufc-submission-offense",
+        "ufc-grappling-offense",
+        "ufc-wrestling-offense",
+        "synthesizer"
+      ],
+      "suggested_correction": "Do not multiplicatively penalize a specialist skill just because a fighter is on a losing streak — separate skill atrophy from poor matchups/results. Require concrete evidence of the specific skill failing before discounting it.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "alice-ardelean__polyana-viana",
+          "what_we_said": "Viana's 1.7 sub_avg discounted because of 0-4 recent streak and 'compromised grappling confidence.'",
+          "what_happened": "Viana submitted Ardelean in R2, demonstrating her sub hunting remained fully operational."
+        }
+      ]
+    },
+    {
+      "id": "watch_010",
+      "pattern": "When the underdog's primary finishing path is identified by specialists as the single coherent danger, the synthesizer still floors that method probability at 2-6% rather than at the empirical base rate for that path in similar matchups.",
+      "responsible_agents": [
+        "synthesizer"
+      ],
+      "suggested_correction": "When the underdog's primary finishing path is identified as the single coherent danger, the method probability for that path should be floored at ~12-15%, not 5-6%, even if the overall win probability remains in the 28-30% range.",
+      "confidence": "low",
+      "evidence_count": 1,
+      "first_seen": "May 16, 2026",
+      "last_confirmed": "May 16, 2026",
+      "status": "watching",
+      "examples": [
+        {
+          "event_key": "ufc-fight-night--allen-vs--costa__May 16, 2026",
+          "fight_key": "alice-ardelean__polyana-viana",
+          "what_we_said": "Sub probability set at 6% despite identifying scramble/clinch sub as 'the one genuine danger.'",
+          "what_happened": "Viana submitted Ardelean in R2 — the identified danger path was the actual outcome."
+        }
+      ]
+    }
+  ],
   "archived": []
 }
