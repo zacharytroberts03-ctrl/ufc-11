@@ -25,7 +25,25 @@ import { Capacitor } from "@capacitor/core";
 const REVENUECAT_IOS_PUBLIC_KEY = process.env.NEXT_PUBLIC_REVENUECAT_IOS_KEY ?? "";
 
 export function isNativeIOS(): boolean {
-  return Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios";
+  // Primary: Capacitor's official check (works when the native bridge JS
+  // injects window.Capacitor properly).
+  if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios") {
+    return true;
+  }
+
+  // Fallback: the native iOS shell appends "FightZ-iOS" to the WebView UA
+  // (see capacitor.config.ts → ios.appendUserAgent). This catches cases where
+  // Capacitor's bridge JS hasn't initialized — CSP issues, race conditions,
+  // or @capacitor/core version drift between the deployed JS bundle and the
+  // native shell. UA detection doesn't depend on the bridge.
+  if (typeof window !== "undefined") {
+    const ua = window.navigator.userAgent || "";
+    if (ua.includes("FightZ-iOS")) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 let _configured = false;

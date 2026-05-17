@@ -33,7 +33,7 @@ export default function PaywallPage() {
     // Web browser: Apple requires IAP for digital subscriptions, so we can't
     // sell on the web. Direct users to the iOS app.
     alert(
-      "In-app subscriptions are only available in the FightZ iOS app (coming soon to the App Store)."
+      "In-app subscriptions require the FightZ iOS app. Install from the App Store (or TestFlight if invited) to subscribe."
     );
   };
 

@@ -25,6 +25,12 @@ const config: CapacitorConfig = {
   },
   ios: {
     contentInset: "always",
+    // Marker the iOS shell appends to navigator.userAgent. lib/native.ts
+    // isNativeIOS() looks for it as a fallback when Capacitor's bridge JS
+    // hasn't injected window.Capacitor (CSP issues, race conditions, or
+    // @capacitor/core version drift between the deployed JS and the native
+    // shell). UA detection doesn't depend on the bridge.
+    appendUserAgent: "FightZ-iOS",
   },
 };
 
