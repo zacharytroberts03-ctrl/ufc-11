@@ -23,13 +23,18 @@ const config: CapacitorConfig = {
     url: "https://fightz.app",
     cleartext: false,
   },
+  // Marker the iOS shell appends to navigator.userAgent. lib/native.ts
+  // isNativeIOS() looks for it as a fallback when Capacitor's bridge JS
+  // hasn't injected window.Capacitor (CSP, race conditions, or @capacitor/core
+  // version drift between the deployed JS and the native shell). UA detection
+  // doesn't depend on the bridge.
+  //
+  // Set at both top-level AND ios.appendUserAgent for redundancy — Build 10
+  // had the ios-only form and the marker didn't appear, so we add the top-level
+  // form which has worked since Capacitor v1.
+  appendUserAgent: "FightZ-iOS",
   ios: {
     contentInset: "always",
-    // Marker the iOS shell appends to navigator.userAgent. lib/native.ts
-    // isNativeIOS() looks for it as a fallback when Capacitor's bridge JS
-    // hasn't injected window.Capacitor (CSP issues, race conditions, or
-    // @capacitor/core version drift between the deployed JS and the native
-    // shell). UA detection doesn't depend on the bridge.
     appendUserAgent: "FightZ-iOS",
   },
 };
