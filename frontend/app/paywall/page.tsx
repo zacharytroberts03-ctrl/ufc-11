@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Capacitor } from "@capacitor/core";
 import { isNativeIOS, purchasePackageById, restorePurchases } from "@/lib/native";
 
 export default function PaywallPage() {
@@ -32,8 +33,21 @@ export default function PaywallPage() {
 
     // Web browser: Apple requires IAP for digital subscriptions, so we can't
     // sell on the web. Direct users to the iOS app.
+    //
+    // TEMPORARY DIAGNOSTIC (remove after we confirm native detection works).
+    // If this alert fires inside the iOS app, screenshot it and send back so
+    // we can see which detection clause failed.
+    const ua = typeof window !== "undefined" ? window.navigator.userAgent : "(no window)";
+    const isNative = Capacitor.isNativePlatform();
+    const platform = Capacitor.getPlatform();
+    const hasFightZMarker = ua.includes("FightZ-iOS");
     alert(
-      "In-app subscriptions require the FightZ iOS app. Install from the App Store (or TestFlight if invited) to subscribe."
+      "Subscriptions require the FightZ iOS app.\n\n" +
+        "--- DEBUG (temporary) ---\n" +
+        `Capacitor.isNativePlatform: ${isNative}\n` +
+        `Capacitor.getPlatform: ${platform}\n` +
+        `UA contains FightZ-iOS: ${hasFightZMarker}\n\n` +
+        `UA: ${ua.slice(0, 200)}`
     );
   };
 
